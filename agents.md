@@ -25,6 +25,21 @@ vercel dev
    npm i -g vercel
    ```
 
+### Managing Data
+
+**Reset Database (with Backup):**
+The project includes a script to safely wipe the voting database while creating a local backup.
+
+```bash
+cd frontend
+npm run reset-votes
+```
+
+What this does:
+1. Downloads current `votes.json` from GitHub
+2. Saves it to `frontend/backups/votes_backup_[TIMESTAMP].json`
+3. Clears the remote `votes.json` on GitHub
+
 ## Project Overview
 
 A voting canvas application where users drag stars onto idea cards to vote. Results are saved to GitHub via serverless functions.
@@ -41,6 +56,7 @@ A voting canvas application where users drag stars onto idea cards to vote. Resu
 - `frontend/src/App.jsx` - Main application logic
 - `frontend/api/save-vote.js` - Saves votes to GitHub
 - `frontend/api/get-votes.js` - Fetches votes from GitHub
+- `frontend/scripts/reset-votes.js` - Admin script to clear/backup DB
 - `frontend/src/data/ideas.json` - Idea data source
 
 ### Development Workflow
@@ -60,4 +76,3 @@ A voting canvas application where users drag stars onto idea cards to vote. Resu
 
 **Build errors:**
 - Clear `node_modules` and reinstall: `rm -rf node_modules && npm install`
-
