@@ -16,13 +16,20 @@ export default function App() {
   // Queue Management
   const [currentIndex, setCurrentIndex] = useState(0);
   const [exitVariant, setExitVariant] = useState(null); // 'cut', 'keep', 'love'
+  const [displayedIdeaId, setDisplayedIdeaId] = useState(null); // Track which idea is currently displayed
 
   // Derived State
   const activeCandidates = useMemo(() => {
     return ideas.filter(i => i.status === 'candidate' || i.status === 'loved');
   }, [ideas]);
 
-  const currentIdea = activeCandidates[currentIndex];
+  // Use displayedIdeaId if set, otherwise use currentIndex
+  const currentIdea = useMemo(() => {
+    if (displayedIdeaId) {
+      return ideas.find(i => i.id === displayedIdeaId) || activeCandidates[currentIndex];
+    }
+    return activeCandidates[currentIndex];
+  }, [displayedIdeaId, activeCandidates, currentIndex, ideas]);
 
   const stats = useMemo(() => {
     const s = { Planning: 0, Action: 0, Integration: 0 };
@@ -37,37 +44,49 @@ export default function App() {
   // Handlers
   const startSwiping = () => {
     setCurrentIndex(0);
+    setDisplayedIdeaId(null);
     setAppPhase('swiping');
   };
 
   const handleAction = async (action) => {
     if (!currentIdea) return;
     
-    // 1. Set animation variant
+    // Store the current idea ID before any state changes
+    const ideaIdToUpdate = currentIdea.id;
+    
+    // 1. Lock the displayed idea so it doesn't change during animation
+    setDisplayedIdeaId(ideaIdToUpdate);
+    
+    // 2. Set animation variant
     setExitVariant(action);
     
-    // 2. Wait for animation to finish (approximate duration)
-    await new Promise(r => setTimeout(r, 600)); // Slightly longer to allow full exit
+    // 3. Wait for animation to finish (duration depends on action)
+    const animationDuration = action === 'cut' ? 500 : action === 'love' ? 300 : 300;
+    await new Promise(r => setTimeout(r, animationDuration));
 
-    // 3. Update State Logic
+    // 4. Update State Logic AFTER animation completes
     if (action === 'cut') {
       setIdeas(prev => prev.map(i => 
-        i.id === currentIdea.id ? { ...i, status: 'cut' } : i
+        i.id === ideaIdToUpdate ? { ...i, status: 'cut' } : i
       ));
+      // Move to next after state update
       if (currentIndex >= activeCandidates.length - 1) {
-         setCurrentIndex(0);
+        setCurrentIndex(0);
       }
+      setDisplayedIdeaId(null); // Clear lock
+      setExitVariant(null);
     } else if (action === 'love') {
         setIdeas(prev => prev.map(i => 
-            i.id === currentIdea.id ? { ...i, status: 'loved' } : i
+            i.id === ideaIdToUpdate ? { ...i, status: 'loved' } : i
         ));
         moveToNext();
+        setDisplayedIdeaId(null); // Clear lock
+        setExitVariant(null);
     } else if (action === 'keep') {
         moveToNext();
+        setDisplayedIdeaId(null); // Clear lock
+        setExitVariant(null);
     }
-    
-    // 4. Reset animation state
-    setExitVariant(null);
   };
 
   const moveToNext = () => {
@@ -175,16 +194,26 @@ export default function App() {
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50 text-gray-800 font-sans">
         <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
           <h1 className="text-3xl font-bold mb-2 text-center text-gray-900">Survivor Mode</h1>
-          <p className="mb-8 text-gray-500 text-center text-sm">
+          <p className="mb-4 text-gray-500 text-center text-sm">
             Whittle down the deck until only your favorites remain.
           </p>
+          
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <p className="text-xs text-gray-600 leading-relaxed">
+              <strong className="text-gray-900">How it works:</strong> You'll swipe through ideas one by one. 
+              <strong className="text-gray-900"> Cut</strong> removes them permanently. 
+              <strong className="text-gray-900"> Not Sure</strong> keeps them in rotation for later. 
+              <strong className="text-gray-900"> Love</strong> marks favorites (they stay in rotation too). 
+              Keep refining until you hit your target count for each phase.
+            </p>
+          </div>
           
           <div className="space-y-6 mb-8">
             {PHASES.map(phase => (
               <div key={phase} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
                 <label className="font-semibold text-gray-700">{phase}</label>
                 <div className="flex items-center gap-3">
-                  <span className="text-xs text-gray-400 uppercase font-bold">Target</span>
+                  <span className="text-xs text-gray-400 uppercase font-bold">Target Ideas:</span>
                   <input 
                     type="number" 
                     min="1" 
@@ -340,6 +369,13 @@ export default function App() {
                     <div>
                         <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wide mb-1">Purpose</h3>
                         <p>{currentIdea.purpose}</p>
+                    </div>
+                )}
+
+                {currentIdea.toolsets_used && (
+                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                        <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wide mb-2">Tools Used</h3>
+                        <p className="text-sm text-gray-700 font-medium">{currentIdea.toolsets_used}</p>
                     </div>
                 )}
                 
