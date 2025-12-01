@@ -1,0 +1,86 @@
+[
+  {
+    "voter": "Super Mario [Fake Tester] ",
+    "timestamp": "2025-12-01T23:51:52.344Z",
+    "selections": [
+      {
+        "id": 1,
+        "title": "The Pre-Mortem ☠️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 26,
+        "title": "Sequence Logic 🔗",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 30,
+        "title": "The Email Simulator 📧",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 36,
+        "title": "The Goal Cleaner 🧹",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 38,
+        "title": "The Buy-In Barometer 🌡️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 39,
+        "title": "The Meeting Detox 🗑️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 40,
+        "title": "The Scenario Spinner 🎲",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 41,
+        "title": "Name It to Tame It 🏷️",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 42,
+        "title": "The 5-Minute Sprint ⏱️",
+        "phase": "Action",
+        "votes": 2
+      },
+      {
+        "id": 44,
+        "title": "The Trigger Map 📍",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 45,
+        "title": "The Flow State Map 🌊",
+        "phase": "Integration",
+        "votes": 2
+      },
+      {
+        "id": 46,
+        "title": "The \"Un-Learning\" List 🧠",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 48,
+        "title": "The Gratitude Graph 🤝",
+        "phase": "Integration",
+        "votes": 1
+      }
+    ]
+  }
+]
