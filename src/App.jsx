@@ -206,7 +206,11 @@ const TransitionOverlay = ({ show, message, onComplete }) => {
 
 // Ranking Overlay Component
 const RankingOverlay = ({ show, onClose, rankings, isLoading }) => {
+    const [activeTab, setActiveTab] = useState(PHASES[0]); // Default to first phase
+
     if (!show) return null;
+
+    const filteredRankings = rankings.filter(item => item.phase === activeTab);
 
     return (
         <AnimatePresence>
@@ -230,25 +234,44 @@ const RankingOverlay = ({ show, onClose, rankings, isLoading }) => {
                         onClick={e => e.stopPropagation()}
                     >
                         {/* Header */}
-                        <div className="p-8 border-b border-gray-200 flex justify-between items-center">
-                            <h2 className="text-3xl font-semibold text-gray-900">Vote Rankings</h2>
-                            <button 
-                                onClick={onClose}
-                                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                            >
-                                <X size={24} />
-                            </button>
+                        <div className="p-8 border-b border-gray-200 flex flex-col gap-6">
+                            <div className="flex justify-between items-center">
+                                <h2 className="text-3xl font-semibold text-gray-900">Vote Rankings</h2>
+                                <button 
+                                    onClick={onClose}
+                                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                >
+                                    <X size={24} />
+                                </button>
+                            </div>
+
+                            {/* Tabs */}
+                            <div className="flex gap-2">
+                                {PHASES.map(phase => (
+                                    <button
+                                        key={phase}
+                                        onClick={() => setActiveTab(phase)}
+                                        className={`px-6 py-2 rounded-full font-medium text-sm transition-colors ${
+                                            activeTab === phase 
+                                            ? 'bg-black text-white' 
+                                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                        }`}
+                                    >
+                                        {phase}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                         
                         {/* Rankings List */}
                         <div className="flex-1 overflow-y-auto p-8">
                             {isLoading ? (
                                 <div className="text-center py-12 text-gray-500">Loading votes...</div>
-                            ) : rankings.length === 0 ? (
-                                <div className="text-center py-12 text-gray-500">No votes yet</div>
+                            ) : filteredRankings.length === 0 ? (
+                                <div className="text-center py-12 text-gray-500">No votes yet for this phase</div>
                             ) : (
                                 <div className="space-y-4">
-                                    {rankings.map((item, index) => (
+                                    {filteredRankings.map((item, index) => (
                                         <div 
                                             key={item.id}
                                             className="flex items-center gap-6 p-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
@@ -261,9 +284,6 @@ const RankingOverlay = ({ show, onClose, rankings, isLoading }) => {
                                                     <h3 className="text-lg font-semibold text-gray-900 truncate">
                                                         {item.title}
                                                     </h3>
-                                                    <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs font-semibold uppercase rounded-full whitespace-nowrap">
-                                                        {item.phase}
-                                                    </span>
                                                 </div>
                                                 <div className="flex items-center gap-2 text-gray-600">
                                                     <Star size={16} fill="currentColor" className="text-yellow-400" />
