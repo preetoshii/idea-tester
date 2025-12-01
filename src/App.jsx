@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import initialIdeas from './data/ideas.json';
-import { Check, X, Settings, ChevronRight, ChevronLeft, Heart, HelpCircle, Download, Copy, ZoomIn, Star, Maximize2, Info, Send, User } from 'lucide-react';
+import { Check, X, Settings, ChevronRight, ChevronLeft, Heart, HelpCircle, Download, Copy, ZoomIn, Star, Maximize2, Info, Send, User, BarChart3 } from 'lucide-react';
 
 const PHASES = ["Planning", "Action", "Integration"];
 
@@ -204,6 +204,91 @@ const TransitionOverlay = ({ show, message, onComplete }) => {
     );
 };
 
+// Ranking Overlay Component
+const RankingOverlay = ({ show, onClose, rankings, isLoading }) => {
+    if (!show) return null;
+
+    return (
+        <AnimatePresence>
+            {show && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 z-[100] flex items-center justify-center p-8"
+                    onClick={onClose}
+                >
+                    {/* Frosted background */}
+                    <div className="absolute inset-0 bg-white/80 backdrop-blur-md" />
+                    
+                    {/* Content */}
+                    <motion.div
+                        initial={{ scale: 0.95, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.95, opacity: 0 }}
+                        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        {/* Header */}
+                        <div className="p-8 border-b border-gray-200 flex justify-between items-center">
+                            <h2 className="text-3xl font-semibold text-gray-900">Vote Rankings</h2>
+                            <button 
+                                onClick={onClose}
+                                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                            >
+                                <X size={24} />
+                            </button>
+                        </div>
+                        
+                        {/* Rankings List */}
+                        <div className="flex-1 overflow-y-auto p-8">
+                            {isLoading ? (
+                                <div className="text-center py-12 text-gray-500">Loading votes...</div>
+                            ) : rankings.length === 0 ? (
+                                <div className="text-center py-12 text-gray-500">No votes yet</div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {rankings.map((item, index) => (
+                                        <div 
+                                            key={item.id}
+                                            className="flex items-center gap-6 p-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+                                        >
+                                            <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-gray-100 rounded-full text-gray-600 font-semibold text-lg">
+                                                {index + 1}
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-3 mb-1">
+                                                    <h3 className="text-lg font-semibold text-gray-900 truncate">
+                                                        {item.title}
+                                                    </h3>
+                                                    <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs font-semibold uppercase rounded-full whitespace-nowrap">
+                                                        {item.phase}
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-gray-600">
+                                                    <Star size={16} fill="currentColor" className="text-yellow-400" />
+                                                    <span className="text-sm font-medium">
+                                                        {item.totalStars} {item.totalStars === 1 ? 'star' : 'stars'} 
+                                                        {item.voterCount > 0 && (
+                                                            <span className="text-gray-400 ml-2">
+                                                                from {item.voterCount} {item.voterCount === 1 ? 'voter' : 'voters'}
+                                                            </span>
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
+};
+
 export default function App() {
   const [appPhaseIndex, setAppPhaseIndex] = useState(0); 
   const [votes, setVotes] = useState({}); 
@@ -220,6 +305,9 @@ export default function App() {
   const [userName, setUserName] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [sentSuccess, setSentSuccess] = useState(false);
+  const [showRankings, setShowRankings] = useState(false);
+  const [rankings, setRankings] = useState([]);
+  const [isLoadingRankings, setIsLoadingRankings] = useState(false);
 
   const cardRectsRef = React.useRef([]);
   const dockRectRef = React.useRef(null);
@@ -487,6 +575,65 @@ export default function App() {
       }
   };
 
+  const fetchRankings = async () => {
+      setIsLoadingRankings(true);
+      setShowRankings(true);
+      
+      try {
+          const response = await fetch('/api/get-votes');
+          const allVotes = await response.json();
+          
+          if (!Array.isArray(allVotes)) {
+              setRankings([]);
+              return;
+          }
+          
+          // Aggregate votes by idea
+          const ideaVotes = {};
+          const ideaVoters = {};
+          
+          allVotes.forEach(vote => {
+              if (vote.selections && Array.isArray(vote.selections)) {
+                  vote.selections.forEach(selection => {
+                      const ideaId = selection.id;
+                      if (!ideaVotes[ideaId]) {
+                          ideaVotes[ideaId] = 0;
+                          ideaVoters[ideaId] = new Set();
+                      }
+                      ideaVotes[ideaId] += selection.votes || 0;
+                      if (vote.voter) {
+                          ideaVoters[ideaId].add(vote.voter);
+                      }
+                  });
+              }
+          });
+          
+          // Convert to array and sort
+          const rankingsArray = Object.entries(ideaVotes)
+              .map(([id, totalStars]) => {
+                  const idea = initialIdeas.find(i => i.id === parseInt(id));
+                  if (!idea) return null;
+                  
+                  return {
+                      id: idea.id,
+                      title: idea.title,
+                      phase: idea.phase,
+                      totalStars,
+                      voterCount: ideaVoters[id]?.size || 0
+                  };
+              })
+              .filter(item => item !== null)
+              .sort((a, b) => b.totalStars - a.totalStars);
+          
+          setRankings(rankingsArray);
+      } catch (error) {
+          console.error("Error fetching rankings:", error);
+          setRankings([]);
+      } finally {
+          setIsLoadingRankings(false);
+      }
+  };
+
   // --- VIEWS ---
 
   // 1. Intro View
@@ -589,6 +736,15 @@ export default function App() {
                               ... Jk
                           </p>
                       </div>
+
+                      {/* View Rankings Button */}
+                      <button 
+                          onClick={fetchRankings}
+                          className="bg-black text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-colors flex items-center gap-2"
+                      >
+                          <BarChart3 size={20} />
+                          View All Votes
+                      </button>
                   </div>
               </div>
 
@@ -611,6 +767,14 @@ export default function App() {
                   show={transitionOverlay.show}
                   message={transitionOverlay.message}
                   onComplete={() => transitionOverlay.nextPhase !== null && performPhaseTransition(transitionOverlay.nextPhase)}
+              />
+              
+              {/* Rankings Overlay */}
+              <RankingOverlay 
+                  show={showRankings}
+                  onClose={() => setShowRankings(false)}
+                  rankings={rankings}
+                  isLoading={isLoadingRankings}
               />
           </div>
       );
