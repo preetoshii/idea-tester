@@ -779,7 +779,12 @@ export default function App() {
               </div>
 
               {/* Video - Fixed at bottom */}
-              <div className="fixed bottom-0 left-0 right-0 flex justify-center items-end pointer-events-none">
+              <motion.div 
+                  initial={{ y: '100%' }}
+                  animate={{ y: '0%' }}
+                  transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.5 }}
+                  className="fixed bottom-0 left-0 right-0 flex justify-center items-end pointer-events-none"
+              >
                   <video 
                       autoPlay 
                       loop 
@@ -790,7 +795,7 @@ export default function App() {
                   >
                       <source src="/voting_preetoshi.mp4" type="video/mp4" />
                   </video>
-              </div>
+              </motion.div>
               
               {/* Transition Overlay */}
               <TransitionOverlay 
@@ -842,7 +847,12 @@ export default function App() {
               </div>
 
               {/* Video - Fixed at bottom */}
-              <div className="fixed bottom-0 left-0 right-0 flex justify-center items-end pointer-events-none">
+              <motion.div 
+                  initial={{ y: '100%' }}
+                  animate={{ y: '0%' }}
+                  transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.5 }}
+                  className="fixed bottom-0 left-0 right-0 flex justify-center items-end pointer-events-none"
+              >
                   <video 
                       autoPlay 
                       loop 
@@ -853,7 +863,7 @@ export default function App() {
                   >
                       <source src="/laughing_preetoshi.mp4" type="video/mp4" />
                   </video>
-              </div>
+              </motion.div>
               
               {/* Transition Overlay */}
               <TransitionOverlay 
