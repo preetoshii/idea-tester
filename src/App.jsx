@@ -548,6 +548,20 @@ export default function App() {
       setIsSending(true);
       const results = generateResults();
 
+      const handleFallback = async () => {
+          try {
+              await navigator.clipboard.writeText(JSON.stringify(results, null, 2));
+              alert("Automatic upload failed. Your results have been COPIED to your clipboard.\n\nPlease paste and send them to Preetoshi (Slack/Email).");
+              setTransitionOverlay({ show: true, message: 'Heheh', nextPhase: 4 });
+              setSentSuccess(false);
+          } catch (err) {
+              console.error("Clipboard copy failed:", err);
+              alert("Upload failed. Please download the results manually on the next screen.");
+              setTransitionOverlay({ show: true, message: 'Heheh', nextPhase: 4 });
+              setSentSuccess(false);
+          }
+      };
+
       try {
           const response = await fetch('/api/save-vote', {
               method: 'POST',
@@ -586,7 +600,7 @@ export default function App() {
               setSentSuccess(true);
           } else {
               console.error("Save error:", data);
-              alert("Failed to save. Please try downloading the file instead.");
+              await handleFallback();
           }
       } catch (error) {
           console.error("Error saving:", error);
@@ -594,7 +608,7 @@ export default function App() {
           if (error.message.includes('JSON') && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
               alert("API route not available. For local testing, run 'vercel dev' instead of 'npm run dev'");
           } else {
-              alert("Error saving. Please check your connection.");
+              await handleFallback();
           }
       } finally {
           setIsSending(false);
