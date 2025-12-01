@@ -7,9 +7,9 @@ import { Check, X, Settings, ChevronRight, ChevronLeft, Heart, HelpCircle, Downl
 const PHASES = ["Planning", "Action", "Integration"];
 
 const PHASE_DESCRIPTIONS = {
-    "Planning": "Translating the \"North Star\" into concrete steps and anticipating the path ahead.",
-    "Action": "Executing the plan, building skills, and maintaining momentum.",
-    "Integration": "Making sense of the data, celebrating wins, and adjusting the plan."
+    "Planning": "Turning the \"North Star\" into a Roadmap. The user knows what they want (from Discovery), but not how to get there. This phase is about strategy, not just to-do lists. We need to help them anticipate obstacles, make trade-offs, and define the specific steps to turn a vague aspiration into a concrete commitment.",
+    "Action": "Overcoming Friction in the Real World. The user has left the planning stage and is in the \"Messy Middle\" of execution. This is where motivation fades and old habits fight back. Our goal is to provide micro-interventions that reduce the friction of starting, help regulate stress, and keep them moving when things get hard.",
+    "Integration": "Turning Experience into Wisdom. The user has tried to take action—now they need to make sense of the results. This phase focuses on pattern recognition: distinguishing between bad luck and bad process, celebrating progress, and deciding how to adjust the plan for the next cycle."
 };
 
 const YOUR_EMAIL = "preetoshi@betterup.co"; 
@@ -80,17 +80,21 @@ const DraggableStar = ({ id, onDragStart, onDragEnd, onDrag }) => {
             dragSnapToOrigin
             dragElastic={0}
             dragMomentum={false}
-            dragTransition={{ power: 0, timeConstant: 0 }}
             whileDrag={{ 
                 scale: 1.2, 
                 cursor: 'grabbing', 
                 zIndex: 9999,
-                position: 'fixed' // This is key - makes it escape all containers
+                transition: { duration: 0 } // Instant scale, no animation
             }}
             onDragStart={onDragStart}
             onDrag={onDrag}
             onDragEnd={(e, info) => onDragEnd(e, info, id)}
-            className="cursor-grab active:cursor-grabbing p-2 hover:scale-110 transition-transform motion-drag-star"
+            style={{ 
+                position: 'relative',
+                touchAction: 'none',
+                willChange: 'transform'
+            }}
+            className="cursor-grab active:cursor-grabbing p-2 motion-drag-star"
         >
             <div className="bg-yellow-400 text-white p-3 rounded-full shadow-lg shadow-yellow-400/50 ring-2 ring-white pointer-events-none">
                 <Star size={24} fill="currentColor" strokeWidth={2} className="text-yellow-600" />
@@ -154,12 +158,61 @@ const CanvasCard = ({ idea, votes, onRemoveVote, onViewDetails, isHovered }) => 
     );
 };
 
+// Transition Overlay Component
+const TransitionOverlay = ({ show, message, onComplete }) => {
+    const [isExiting, setIsExiting] = useState(false);
+
+    useEffect(() => {
+        if (show) {
+            setIsExiting(false); // Reset when showing
+            // After fade in completes, wait, then fade out
+            const timer = setTimeout(() => {
+                setIsExiting(true);
+                // Call onComplete after fade out animation
+                setTimeout(() => {
+                    onComplete();
+                }, 500); // Match fade out duration
+            }, 1500); // Show message for 1.5 seconds
+
+            return () => clearTimeout(timer);
+        } else {
+            setIsExiting(false); // Reset when hidden
+        }
+    }, [show, onComplete]);
+
+    return (
+        <AnimatePresence>
+            {show && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: isExiting ? 0 : 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="fixed inset-0 z-[9999] bg-white flex items-center justify-center"
+                >
+                    <motion.div
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: isExiting ? 0.9 : 1, opacity: isExiting ? 0 : 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="text-6xl font-semibold text-gray-900"
+                    >
+                        {message}
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
+};
+
 export default function App() {
   const [appPhaseIndex, setAppPhaseIndex] = useState(0); 
   const [votes, setVotes] = useState({}); 
   const [selectedIdea, setSelectedIdea] = useState(null);
   const [draggedOverId, setDraggedOverId] = useState(null);
   const [draggedOverDock, setDraggedOverDock] = useState(false);
+  
+  // Transition overlay state
+  const [transitionOverlay, setTransitionOverlay] = useState({ show: false, message: '', nextPhase: null });
   
   // Track stars per phase so going back works correctly
   const [starsByPhase, setStarsByPhase] = useState({});
@@ -207,7 +260,20 @@ export default function App() {
       }
   }, [currentPhaseName, starsByPhase]);
 
+  // Sound helper
+  const playSound = (filename) => {
+      try {
+          const audio = new Audio(`/${filename}`);
+          audio.volume = 0.5; // Adjust volume as needed
+          audio.play().catch(err => console.log("Audio play failed:", err));
+      } catch (err) {
+          console.log("Sound error:", err);
+      }
+  };
+
   const handleStarDragStart = () => {
+      playSound('pickup_star.wav');
+      
       cardRectsRef.current = Array.from(document.querySelectorAll('[data-idea-id]')).map(el => ({
           id: parseInt(el.getAttribute('data-idea-id')),
           rect: el.getBoundingClientRect()
@@ -221,7 +287,9 @@ export default function App() {
   };
 
   const handleStarDrag = (event, info) => {
-      const { x, y } = info.point;
+      // Use actual mouse coordinates for accurate collision detection
+      const x = event.clientX || (event.touches && event.touches[0]?.clientX) || 0;
+      const y = event.clientY || (event.touches && event.touches[0]?.clientY) || 0;
       
       // Check dock hover
       if (dockRectRef.current) {
@@ -252,7 +320,9 @@ export default function App() {
   };
 
   const handleStarDragEnd = (event, info, starId) => {
-      const { x, y } = info.point;
+      // Use actual mouse coordinates for accurate collision detection
+      const x = event.clientX || (event.changedTouches && event.changedTouches[0]?.clientX) || 0;
+      const y = event.clientY || (event.changedTouches && event.changedTouches[0]?.clientY) || 0;
       
       // Check if dropped on dock (snap back)
       if (dockRectRef.current) {
@@ -263,6 +333,7 @@ export default function App() {
               y <= dockRectRef.current.bottom
           );
           if (overDock) {
+              playSound('star_goes_back.wav');
               setDraggedOverDock(false);
               setDraggedOverId(null);
               cardRectsRef.current = [];
@@ -282,6 +353,9 @@ export default function App() {
       
       if (targetCard) {
           handleVote(targetCard.id, starId);
+      } else {
+          // Dropped somewhere else - star goes back
+          playSound('star_goes_back.wav');
       }
       
       setDraggedOverId(null);
@@ -293,6 +367,8 @@ export default function App() {
       const currentVotes = votes[ideaId] || 0;
       if (currentVotes >= MAX_VOTES_PER_CARD) return;
 
+      playSound('deposit_star.wav');
+      
       setVotes(prev => ({
           ...prev,
           [ideaId]: currentVotes + 1
@@ -307,6 +383,8 @@ export default function App() {
   };
 
   const handleRemoveVote = (ideaId) => {
+      playSound('star_goes_back.wav');
+      
       setVotes(prev => {
           const current = prev[ideaId] || 0;
           if (current <= 0) return prev;
@@ -318,18 +396,43 @@ export default function App() {
               ...prev,
               [currentPhaseName]: [...(prev[currentPhaseName] || []), { 
                   id: `returned-${Date.now()}`, 
-                  index: 0 
+                  index: 0
               }]
           }));
       }
+  };
+
+  const performPhaseTransition = (nextPhase) => {
+      // Play applause
+      if (nextPhase >= 1 && nextPhase <= 4) {
+          playSound('applause.wav');
+      }
+      setAppPhaseIndex(nextPhase);
+      setTransitionOverlay({ show: false, message: '', nextPhase: null });
   };
 
   const handleNext = () => {
       if (appPhaseIndex === 3) {
           // Auto-submit on finish
           handleSendEmail();
+      } else if (appPhaseIndex === 0) {
+          // Intro to first phase - no overlay, just transition
+          playSound('applause.wav');
+          setAppPhaseIndex(1);
       } else {
-          setAppPhaseIndex(prev => prev + 1);
+          // Phase transitions with overlay
+          const nextPhase = appPhaseIndex + 1;
+          let message = '';
+          
+          if (appPhaseIndex === 1) {
+              // Completing first phase
+              message = `Great job ${userName}!`;
+          } else if (appPhaseIndex === 2) {
+              // Completing second phase
+              message = `You're on fire ${userName}!`;
+          }
+          
+          setTransitionOverlay({ show: true, message, nextPhase });
       }
   };
 
@@ -357,38 +460,28 @@ export default function App() {
       setIsSending(true);
       const results = generateResults();
 
-      const message = `Idea Voting Results from ${results.voter}
-
-Timestamp: ${new Date(results.timestamp).toLocaleString()}
-
-Selections:
-${results.selections.map(s => `\n${s.phase} Phase:\n  - ${s.title} (${s.votes} star${s.votes > 1 ? 's' : ''})`).join('\n')}
-
----
-Full JSON:
-${JSON.stringify(results, null, 2)}`;
-
       try {
-          const formData = new FormData();
-          formData.append('email', YOUR_EMAIL);
-          formData.append('subject', `Idea Voting Results from ${results.voter}`);
-          formData.append('message', message);
-          formData.append('_captcha', 'false');
-
-          const response = await fetch(`https://formsubmit.co/${YOUR_EMAIL}`, {
+          const response = await fetch('/api/save-vote', {
               method: 'POST',
-              body: formData
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(results)
           });
 
-          if (response.ok) {
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+              // Show transition overlay with "Heheh" before going to completion
+              setTransitionOverlay({ show: true, message: 'Heheh', nextPhase: 4 });
               setSentSuccess(true);
-              setAppPhaseIndex(4); // Go to completion screen
           } else {
-              alert("Failed to send. Please try downloading the file instead.");
+              console.error("Save error:", data);
+              alert("Failed to save. Please try downloading the file instead.");
           }
       } catch (error) {
-          console.error("Error sending:", error);
-          alert("Error sending. Please check your connection.");
+          console.error("Error saving:", error);
+          alert("Error saving. Please check your connection.");
       } finally {
           setIsSending(false);
       }
@@ -458,6 +551,13 @@ ${JSON.stringify(results, null, 2)}`;
                       <source src="/voting_preetoshi.mp4" type="video/mp4" />
                   </video>
               </div>
+              
+              {/* Transition Overlay */}
+              <TransitionOverlay 
+                  show={transitionOverlay.show}
+                  message={transitionOverlay.message}
+                  onComplete={() => transitionOverlay.nextPhase !== null && performPhaseTransition(transitionOverlay.nextPhase)}
+              />
           </div>
       );
   }
@@ -505,6 +605,13 @@ ${JSON.stringify(results, null, 2)}`;
                       <source src="/laughing_preetoshi.mp4" type="video/mp4" />
                   </video>
               </div>
+              
+              {/* Transition Overlay */}
+              <TransitionOverlay 
+                  show={transitionOverlay.show}
+                  message={transitionOverlay.message}
+                  onComplete={() => transitionOverlay.nextPhase !== null && performPhaseTransition(transitionOverlay.nextPhase)}
+              />
           </div>
       );
   }
@@ -611,6 +718,13 @@ ${JSON.stringify(results, null, 2)}`;
                   </div>
               </div>
           </div>
+          
+          {/* Transition Overlay */}
+          <TransitionOverlay 
+              show={transitionOverlay.show}
+              message={transitionOverlay.message}
+              onComplete={() => transitionOverlay.nextPhase !== null && performPhaseTransition(transitionOverlay.nextPhase)}
+          />
       </div>
   );
 }
