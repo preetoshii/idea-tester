@@ -1,467 +1,616 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import initialIdeas from './data/ideas.json';
-import { Check, X, Settings, ChevronRight, RotateCw, Heart, HelpCircle, Download, Copy } from 'lucide-react';
+import { Check, X, Settings, ChevronRight, ChevronLeft, Heart, HelpCircle, Download, Copy, ZoomIn, Star, Maximize2, Info, Send, User } from 'lucide-react';
 
 const PHASES = ["Planning", "Action", "Integration"];
 
-export default function App() {
-  // State
-  const [ideas, setIdeas] = useState(() => 
-    initialIdeas.map(idea => ({ ...idea, status: 'candidate' })) // candidate, cut, loved
-  );
-  const [goals, setGoals] = useState({ Planning: 3, Action: 3, Integration: 3 });
-  const [appPhase, setAppPhase] = useState('setup'); // setup, swiping
-  
-  // Queue Management
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [exitVariant, setExitVariant] = useState(null); // 'cut', 'keep', 'love'
-  const [displayedIdeaId, setDisplayedIdeaId] = useState(null); // Track which idea is currently displayed
+const PHASE_DESCRIPTIONS = {
+    "Planning": "Translating the \"North Star\" into concrete steps and anticipating the path ahead.",
+    "Action": "Executing the plan, building skills, and maintaining momentum.",
+    "Integration": "Making sense of the data, celebrating wins, and adjusting the plan."
+};
 
-  // Derived State
-  const activeCandidates = useMemo(() => {
-    return ideas.filter(i => i.status === 'candidate' || i.status === 'loved');
-  }, [ideas]);
+const YOUR_EMAIL = "preetoshi@betterup.co"; 
 
-  // Use displayedIdeaId if set, otherwise use currentIndex
-  const currentIdea = useMemo(() => {
-    if (displayedIdeaId) {
-      return ideas.find(i => i.id === displayedIdeaId) || activeCandidates[currentIndex];
-    }
-    return activeCandidates[currentIndex];
-  }, [displayedIdeaId, activeCandidates, currentIndex, ideas]);
+// --- COMPONENTS ---
 
-  const stats = useMemo(() => {
-    const s = { Planning: 0, Action: 0, Integration: 0 };
-    activeCandidates.forEach(idea => {
-        if (s[idea.phase] !== undefined) {
-            s[idea.phase]++;
-        }
-    });
-    return s;
-  }, [activeCandidates]);
-
-  // Handlers
-  const startSwiping = () => {
-    setCurrentIndex(0);
-    setDisplayedIdeaId(null);
-    setAppPhase('swiping');
-  };
-
-  const handleAction = async (action) => {
-    if (!currentIdea) return;
-    
-    // Store the current idea ID before any state changes
-    const ideaIdToUpdate = currentIdea.id;
-    
-    // 1. Lock the displayed idea so it doesn't change during animation
-    setDisplayedIdeaId(ideaIdToUpdate);
-    
-    // 2. Set animation variant
-    setExitVariant(action);
-    
-    // 3. Wait for animation to finish (duration depends on action)
-    const animationDuration = action === 'cut' ? 500 : action === 'love' ? 300 : 300;
-    await new Promise(r => setTimeout(r, animationDuration));
-
-    // 4. Update State Logic AFTER animation completes
-    if (action === 'cut') {
-      setIdeas(prev => prev.map(i => 
-        i.id === ideaIdToUpdate ? { ...i, status: 'cut' } : i
-      ));
-      // Move to next after state update
-      if (currentIndex >= activeCandidates.length - 1) {
-        setCurrentIndex(0);
-      }
-      setDisplayedIdeaId(null); // Clear lock
-      setExitVariant(null);
-    } else if (action === 'love') {
-        setIdeas(prev => prev.map(i => 
-            i.id === ideaIdToUpdate ? { ...i, status: 'loved' } : i
-        ));
-        moveToNext();
-        setDisplayedIdeaId(null); // Clear lock
-        setExitVariant(null);
-    } else if (action === 'keep') {
-        moveToNext();
-        setDisplayedIdeaId(null); // Clear lock
-        setExitVariant(null);
-    }
-  };
-
-  const moveToNext = () => {
-      if (currentIndex >= activeCandidates.length - 1) {
-        setCurrentIndex(0); // Loop back to start
-      } else {
-        setCurrentIndex(prev => prev + 1);
-      }
-  };
-
-  const getDistanceToGoal = (phase) => {
-    const current = stats[phase];
-    const goal = goals[phase];
-    return Math.max(0, current - goal);
-  };
-
-  // Helper: Format remaining ideas
-  const formatIdeasForExport = () => {
-      const remaining = ideas.filter(i => i.status !== 'cut');
-      let text = "# Remaining Ideas\n\n";
-      
-      PHASES.forEach(phase => {
-          const phaseIdeas = remaining.filter(i => i.phase === phase);
-          if (phaseIdeas.length > 0) {
-              text += `## ${phase} (${phaseIdeas.length})\n\n`;
-              phaseIdeas.forEach(idea => {
-                  const loveIcon = idea.status === 'loved' ? "❤️ " : "";
-                  text += `### ${loveIcon}${idea.title}\n`;
-                  if(idea.purpose) text += `- **Purpose**: ${idea.purpose}\n`;
-                  if(idea.how_it_works) text += `- **How It Works**: ${idea.how_it_works}\n`;
-                  text += "\n";
-              });
-          }
-      });
-      return text;
-  };
-
-  const handleCopy = async () => {
-      const text = formatIdeasForExport();
-      try {
-          await navigator.clipboard.writeText(text);
-          alert("Remaining ideas copied to clipboard!");
-      } catch (err) {
-          console.error("Failed to copy", err);
-      }
-  };
-
-  const handleDownload = () => {
-      const text = formatIdeasForExport();
-      const blob = new Blob([text], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'remaining_ideas.txt';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-  };
-
-  // Animation Variants
-  const cardVariants = {
-    initial: { scale: 0.9, opacity: 0, y: 20 },
-    animate: { scale: 1, opacity: 1, y: 0 },
-    exit: (variant) => {
-        if (variant === 'cut') {
-            return { 
-                opacity: 0, 
-                scale: 0.2, // Dramatic shrink
-                rotate: 45, 
-                y: 200, // Fall down
-                filter: "grayscale(100%) blur(10px)",
-                transition: { duration: 0.5, ease: "easeInOut" }
-            };
-        }
-        if (variant === 'love') {
-             return { 
-                x: 500, 
-                opacity: 0, 
-                rotate: 10, 
-                scale: 1.05,
-                transition: { duration: 0.3, ease: "backIn" }
-            };
-        }
-        // Keep / Not Sure
-        return { 
-            x: 500, 
-            opacity: 0, 
-            rotate: 5,
-            transition: { duration: 0.3 }
-        };
-    }
-  };
-
-  // Stamp Variants
-  const heartStampVariants = {
-      initial: { scale: 2, opacity: 0, rotate: -15 },
-      animate: { scale: 1, opacity: 1, rotate: -15, transition: { type: "spring", bounce: 0.5 } },
-      exit: { opacity: 0 }
-  }
-
-  // Setup Screen
-  if (appPhase === 'setup') {
+const DetailModal = ({ idea, onClose }) => {
+    if (!idea) return null;
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50 text-gray-800 font-sans">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
-          <h1 className="text-3xl font-bold mb-2 text-center text-gray-900">Survivor Mode</h1>
-          <p className="mb-4 text-gray-500 text-center text-sm">
-            Whittle down the deck until only your favorites remain.
-          </p>
-          
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <p className="text-xs text-gray-600 leading-relaxed">
-              <strong className="text-gray-900">How it works:</strong> You'll swipe through ideas one by one. 
-              <strong className="text-gray-900"> Cut</strong> removes them permanently. 
-              <strong className="text-gray-900"> Not Sure</strong> keeps them in rotation for later. 
-              <strong className="text-gray-900"> Love</strong> marks favorites (they stay in rotation too). 
-              Keep refining until you hit your target count for each phase.
-            </p>
-          </div>
-          
-          <div className="space-y-6 mb-8">
-            {PHASES.map(phase => (
-              <div key={phase} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
-                <label className="font-semibold text-gray-700">{phase}</label>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs text-gray-400 uppercase font-bold">Target Ideas:</span>
-                  <input 
-                    type="number" 
-                    min="1" 
-                    max="20"
-                    value={goals[phase]} 
-                    onChange={(e) => setGoals({...goals, [phase]: parseInt(e.target.value) || 1})}
-                    className="w-16 p-2 border border-gray-200 rounded-md text-center font-bold text-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <button 
-            onClick={startSwiping}
-            className="w-full bg-black text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-gray-800 transition-all active:scale-95 flex items-center justify-center gap-2"
-          >
-            Start Cutting <ChevronRight size={20} />
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // Empty State (All cut? Unlikely if goal > 0, but possible if user cuts everything)
-  if (!currentIdea && activeCandidates.length === 0) {
-     return (
-         <div className="min-h-screen flex items-center justify-center p-6 text-center">
-             <div>
-                 <h2 className="text-2xl font-bold mb-4">Deck Cleared</h2>
-                 <p className="text-gray-500 mb-6">You've cut every single idea.</p>
-                 <button onClick={() => window.location.reload()} className="px-6 py-3 bg-black text-white rounded-full">Restart</button>
-             </div>
-         </div>
-     );
-  }
-
-  // Main Interface
-  const currentPhase = currentIdea?.phase || "";
-  const distance = getDistanceToGoal(currentPhase);
-  const isGoalMet = distance === 0;
-  
-  return (
-    <div className="min-h-screen flex flex-col bg-gray-100 text-gray-800 font-sans">
-      {/* Stats Dashboard */}
-      <div className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-20">
-        <div className="max-w-3xl mx-auto p-4">
-            {/* Header Actions */}
-            <div className="flex justify-between items-center mb-4">
-                <button onClick={() => setAppPhase('setup')} className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors" title="Settings">
-                    <Settings size={20} />
-                </button>
-                
-                <div className="flex gap-2">
-                    <button 
-                        onClick={handleCopy} 
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-600 text-xs font-bold uppercase hover:bg-blue-50 hover:text-blue-600 transition-all" 
-                        title="Copy Remaining Ideas"
-                    >
-                        <Copy size={16} />
-                        Copy Remaining Ideas
-                    </button>
-                    <button 
-                        onClick={handleDownload} 
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-600 text-xs font-bold uppercase hover:bg-blue-50 hover:text-blue-600 transition-all" 
-                        title="Download Remaining Ideas"
-                    >
-                        <Download size={16} />
-                        Download
-                    </button>
-                </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2 mb-2">
-                {PHASES.map(phase => {
-                    const count = stats[phase];
-                    const goal = goals[phase];
-                    const dist = Math.max(0, count - goal);
-                    const met = dist === 0;
-                    
-                    return (
-                        <div key={phase} className={`flex flex-col items-center p-2 rounded-lg transition-colors ${currentPhase === phase ? 'bg-blue-50 ring-1 ring-blue-200' : ''}`}>
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{phase}</span>
-                            <div className="flex items-baseline gap-1">
-                                <span className={`text-xl font-bold ${met ? 'text-green-600' : 'text-gray-900'}`}>
-                                    {count}
-                                </span>
-                                <span className="text-xs text-gray-400 font-medium">/ {goal}</span>
-                            </div>
-                        </div>
-                    )
-                })}
-            </div>
-             
-            {/* Context Banner */}
-            {currentIdea && (
-                <div className={`text-center py-2 px-4 rounded-full text-xs font-bold uppercase tracking-wide transition-colors
-                    ${isGoalMet ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
-                    {isGoalMet 
-                        ? `Goal Met! (${stats[currentPhase]} items remaining)`
-                        : `Cut ${distance} more to reach goal`
-                    }
-                </div>
-            )}
-        </div>
-      </div>
-
-      {/* Card Area */}
-      <div className="flex-1 flex items-center justify-center p-4 overflow-hidden relative">
-          <AnimatePresence mode='wait' custom={exitVariant}>
-            {currentIdea ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
             <motion.div 
-                key={currentIdea.id}
-                variants={cardVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                custom={exitVariant}
-                className="max-w-md w-full bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col min-h-[500px] relative ring-1 ring-black/5 origin-bottom"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="bg-white w-full max-w-2xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+                onClick={e => e.stopPropagation()}
             >
-                
-                {/* Love Stamp Animation */}
-                {(exitVariant === 'love' || currentIdea.status === 'loved') && (
-                     <motion.div 
-                        variants={heartStampVariants}
-                        initial="initial"
-                        animate="animate"
-                        className="absolute top-6 right-6 z-50 pointer-events-none"
-                     >
-                         <div className="border-4 border-pink-500 text-pink-500 rounded-full p-3 shadow-lg bg-white/80 backdrop-blur-sm transform -rotate-12">
-                             <Heart size={48} fill="currentColor" strokeWidth={2} />
-                         </div>
-                     </motion.div>
-                )}
-
-                {/* Header */}
-                <div className="p-8 bg-white border-b border-gray-100 relative">
-                    <div className="flex justify-between items-start mb-2">
-                        <span className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-wider">
-                            {currentIdea.phase}
-                        </span>
-                        <span className="text-gray-300 text-xs font-mono">#{currentIdea.id}</span>
+                <div className="p-6 border-b border-gray-100 flex justify-between items-start bg-gray-50/50">
+                    <div>
+                        <span className="inline-block px-2 py-1 bg-blue-100 text-blue-700 text-xs font-bold uppercase rounded mb-2">{idea.phase}</span>
+                        <h2 className="text-2xl font-bold text-gray-900">{idea.title}</h2>
                     </div>
-                    <h2 className="text-3xl font-bold leading-tight text-gray-900 mb-2">{currentIdea.title}</h2>
-                    {currentIdea.journey_phase && (
-                        <p className="text-gray-500 text-sm font-medium">{currentIdea.journey_phase}</p>
+                    <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full transition-colors"><X size={24} /></button>
+                </div>
+                
+                <div className="p-8 overflow-y-auto space-y-6 text-gray-700">
+                    {idea.purpose && (
+                        <div>
+                            <h3 className="font-bold text-gray-900 uppercase text-xs tracking-wide mb-1">Purpose</h3>
+                            <p>{idea.purpose}</p>
+                        </div>
+                    )}
+                    {idea.toolsets_used && (
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <h3 className="font-bold text-gray-900 uppercase text-xs tracking-wide mb-1">Tools Used</h3>
+                            <p className="font-medium text-gray-800">{idea.toolsets_used}</p>
+                        </div>
+                    )}
+                    {idea.how_it_works && (
+                        <div>
+                            <h3 className="font-bold text-gray-900 uppercase text-xs tracking-wide mb-1">How It Works</h3>
+                            <p>{idea.how_it_works}</p>
+                        </div>
+                    )}
+                    {idea.output && (
+                        <div>
+                            <h3 className="font-bold text-gray-900 uppercase text-xs tracking-wide mb-1">Output</h3>
+                            <p className="italic text-gray-600">{idea.output}</p>
+                        </div>
+                    )}
+                    {idea.why_this_works && (
+                        <div className="bg-blue-50 p-4 rounded-lg text-blue-900 text-sm">
+                            <h3 className="font-bold text-blue-800 uppercase text-xs tracking-wide mb-1">Why This Works</h3>
+                            <p>{idea.why_this_works}</p>
+                        </div>
                     )}
                 </div>
-
-                {/* Content */}
-                <div className="p-8 flex-1 overflow-y-auto space-y-6 text-gray-600 text-base leading-relaxed">
-                {currentIdea.purpose && (
-                    <div>
-                        <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wide mb-1">Purpose</h3>
-                        <p>{currentIdea.purpose}</p>
-                    </div>
-                )}
-
-                {currentIdea.toolsets_used && (
-                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                        <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wide mb-2">Tools Used</h3>
-                        <p className="text-sm text-gray-700 font-medium">{currentIdea.toolsets_used}</p>
-                    </div>
-                )}
-                
-                {currentIdea.how_it_works && (
-                    <div>
-                        <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wide mb-1">How It Works</h3>
-                        <p>{currentIdea.how_it_works}</p>
-                    </div>
-                )}
-
-                {currentIdea.output && (
-                    <div className="pl-4 border-l-2 border-gray-200">
-                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">Output</h3>
-                        <p className="text-gray-500 italic">{currentIdea.output}</p>
-                    </div>
-                )}
-
-                {currentIdea.why_this_works && (
-                    <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100/50">
-                        <h3 className="text-xs font-bold text-blue-700 uppercase tracking-wide mb-1">Why This Works</h3>
-                        <p className="text-blue-900/80 text-sm">{currentIdea.why_this_works}</p>
-                    </div>
-                )}
-                </div>
             </motion.div>
-            ) : null}
-        </AnimatePresence>
-      </div>
+        </div>
+    );
+};
 
-      {/* Controls */}
-      <div className="p-6 bg-white border-t border-gray-100 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] relative z-30">
-        <div className="max-w-md mx-auto flex gap-3">
+const DraggableStar = ({ id, onDragStart, onDragEnd, onDrag }) => {
+    return (
+        <motion.div
+            drag
+            dragConstraints={false}
+            dragSnapToOrigin
+            dragElastic={0}
+            dragMomentum={false}
+            dragTransition={{ power: 0, timeConstant: 0 }}
+            whileDrag={{ 
+                scale: 1.2, 
+                cursor: 'grabbing', 
+                zIndex: 9999,
+                position: 'fixed' // This is key - makes it escape all containers
+            }}
+            onDragStart={onDragStart}
+            onDrag={onDrag}
+            onDragEnd={(e, info) => onDragEnd(e, info, id)}
+            className="cursor-grab active:cursor-grabbing p-2 hover:scale-110 transition-transform motion-drag-star"
+        >
+            <div className="bg-yellow-400 text-white p-3 rounded-full shadow-lg shadow-yellow-400/50 ring-2 ring-white pointer-events-none">
+                <Star size={24} fill="currentColor" strokeWidth={2} className="text-yellow-600" />
+            </div>
+        </motion.div>
+    );
+};
+
+const CanvasCard = ({ idea, votes, onRemoveVote, onViewDetails, isHovered }) => {
+    return (
+        <div 
+            className={`bg-white rounded-xl shadow-md border transition-all duration-300 w-80 p-4 flex flex-col relative group select-none cursor-pointer
+                ${isHovered ? 'border-blue-500 ring-4 ring-blue-500/20 shadow-xl scale-[1.02] z-10' : 'border-gray-200 hover:shadow-lg'}
+            `}
+            data-idea-id={idea.id}
+            onClick={() => onViewDetails(idea)}
+            title="Click to Read Details"
+        >
+            <div className="flex justify-between items-start mb-2 pointer-events-none">
+                <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-[10px] uppercase font-bold rounded-full">
+                    {idea.phase}
+                </span>
+                <div className="text-gray-400" title="View Details">
+                    <Maximize2 size={16} />
+                </div>
+            </div>
+            
+            <h3 className="font-bold text-lg leading-tight mb-2 pointer-events-none">{idea.title}</h3>
+            
+            <div className="flex-1 overflow-hidden mb-4 pointer-events-none">
+                <p className="text-sm text-gray-600 line-clamp-3">{idea.purpose}</p>
+                <div className="mt-2 text-xs text-blue-500 font-medium flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Info size={12} /> Click for details
+                </div>
+            </div>
+
+            <div className="mt-auto border-t pt-3 flex justify-between items-center min-h-[40px]" onClick={e => e.stopPropagation()}>
+                <div className="flex gap-1">
+                    {[...Array(votes || 0)].map((_, i) => (
+                        <motion.div 
+                            key={i} 
+                            initial={{ scale: 0 }} 
+                            animate={{ scale: 1 }} 
+                            className="text-yellow-400 cursor-pointer hover:scale-110 transition-transform group/star"
+                            onClick={(e) => { e.stopPropagation(); onRemoveVote(idea.id); }}
+                            title="Click to remove star"
+                        >
+                            <Star size={32} fill="currentColor" />
+                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover/star:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                                Click to remove star
+                            </div>
+                        </motion.div>
+                    ))}
+                    {(votes || 0) === 0 && <span className="text-xs text-gray-300 italic">Drag star here</span>}
+                </div>
+                <div className="text-xs text-gray-400 font-mono">
+                    {votes || 0}/2
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default function App() {
+  const [appPhaseIndex, setAppPhaseIndex] = useState(0); 
+  const [votes, setVotes] = useState({}); 
+  const [selectedIdea, setSelectedIdea] = useState(null);
+  const [draggedOverId, setDraggedOverId] = useState(null);
+  const [draggedOverDock, setDraggedOverDock] = useState(false);
+  
+  // Track stars per phase so going back works correctly
+  const [starsByPhase, setStarsByPhase] = useState({});
+  
+  const [userName, setUserName] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [sentSuccess, setSentSuccess] = useState(false);
+
+  const cardRectsRef = React.useRef([]);
+  const dockRectRef = React.useRef(null);
+  
+  const STARS_PER_PHASE = 5;
+  const MAX_VOTES_PER_CARD = 2;
+
+  const currentPhaseName = appPhaseIndex > 0 && appPhaseIndex <= 3 ? PHASES[appPhaseIndex - 1] : null;
+  
+  const phaseIdeas = useMemo(() => {
+      if (!currentPhaseName) return [];
+      return initialIdeas.filter(i => i.phase === currentPhaseName);
+  }, [currentPhaseName]);
+
+  // Get available stars for current phase
+  const availableStars = useMemo(() => {
+      if (!currentPhaseName) return [];
+      return starsByPhase[currentPhaseName] || [];
+  }, [currentPhaseName, starsByPhase]);
+
+  // Calculate votes in current phase
+  const votesInCurrentPhase = useMemo(() => {
+      if (!currentPhaseName) return 0;
+      return phaseIdeas.reduce((acc, idea) => acc + (votes[idea.id] || 0), 0);
+  }, [phaseIdeas, votes, currentPhaseName]);
+
+  const remainingStars = STARS_PER_PHASE - votesInCurrentPhase;
+  const canProceed = remainingStars === 0;
+
+  // Initialize stars for a phase if not already set
+  useEffect(() => {
+      if (currentPhaseName && !starsByPhase[currentPhaseName]) {
+          const newStars = Array.from({ length: STARS_PER_PHASE }).map((_, i) => ({
+              id: `${currentPhaseName}-star-${i}-${Date.now()}`,
+              index: i
+          }));
+          setStarsByPhase(prev => ({ ...prev, [currentPhaseName]: newStars }));
+      }
+  }, [currentPhaseName, starsByPhase]);
+
+  const handleStarDragStart = () => {
+      cardRectsRef.current = Array.from(document.querySelectorAll('[data-idea-id]')).map(el => ({
+          id: parseInt(el.getAttribute('data-idea-id')),
+          rect: el.getBoundingClientRect()
+      }));
+      
+      // Cache dock rect
+      const dockEl = document.querySelector('[data-dock-container]');
+      if (dockEl) {
+          dockRectRef.current = dockEl.getBoundingClientRect();
+      }
+  };
+
+  const handleStarDrag = (event, info) => {
+      const { x, y } = info.point;
+      
+      // Check dock hover
+      if (dockRectRef.current) {
+          const overDock = (
+              x >= dockRectRef.current.left && 
+              x <= dockRectRef.current.right && 
+              y >= dockRectRef.current.top && 
+              y <= dockRectRef.current.bottom
+          );
+          setDraggedOverDock(overDock);
+      }
+      
+      // Check card hover
+      const hoveredCard = cardRectsRef.current.find(item => {
+          return (
+              x >= item.rect.left && 
+              x <= item.rect.right && 
+              y >= item.rect.top && 
+              y <= item.rect.bottom
+          );
+      });
+
+      if (hoveredCard) {
+          setDraggedOverId(hoveredCard.id);
+      } else {
+          setDraggedOverId(null);
+      }
+  };
+
+  const handleStarDragEnd = (event, info, starId) => {
+      const { x, y } = info.point;
+      
+      // Check if dropped on dock (snap back)
+      if (dockRectRef.current) {
+          const overDock = (
+              x >= dockRectRef.current.left && 
+              x <= dockRectRef.current.right && 
+              y >= dockRectRef.current.top && 
+              y <= dockRectRef.current.bottom
+          );
+          if (overDock) {
+              setDraggedOverDock(false);
+              setDraggedOverId(null);
+              cardRectsRef.current = [];
+              return; // Just snap back, don't vote
+          }
+      }
+      
+      // Check card drop
+      const targetCard = cardRectsRef.current.find(item => {
+          return (
+              x >= item.rect.left && 
+              x <= item.rect.right && 
+              y >= item.rect.top && 
+              y <= item.rect.bottom
+          );
+      });
+      
+      if (targetCard) {
+          handleVote(targetCard.id, starId);
+      }
+      
+      setDraggedOverId(null);
+      setDraggedOverDock(false);
+      cardRectsRef.current = [];
+  };
+
+  const handleVote = (ideaId, starIdToRemove = null) => {
+      const currentVotes = votes[ideaId] || 0;
+      if (currentVotes >= MAX_VOTES_PER_CARD) return;
+
+      setVotes(prev => ({
+          ...prev,
+          [ideaId]: currentVotes + 1
+      }));
+      
+      if (starIdToRemove && currentPhaseName) {
+          setStarsByPhase(prev => ({
+              ...prev,
+              [currentPhaseName]: prev[currentPhaseName].filter(s => s.id !== starIdToRemove)
+          }));
+      }
+  };
+
+  const handleRemoveVote = (ideaId) => {
+      setVotes(prev => {
+          const current = prev[ideaId] || 0;
+          if (current <= 0) return prev;
+          return { ...prev, [ideaId]: current - 1 };
+      });
+      
+      if (currentPhaseName) {
+          setStarsByPhase(prev => ({
+              ...prev,
+              [currentPhaseName]: [...(prev[currentPhaseName] || []), { 
+                  id: `returned-${Date.now()}`, 
+                  index: 0 
+              }]
+          }));
+      }
+  };
+
+  const handleNext = () => {
+      if (appPhaseIndex === 3) {
+          // Auto-submit on finish
+          handleSendEmail();
+      } else {
+          setAppPhaseIndex(prev => prev + 1);
+      }
+  };
+
+  const handlePrevious = () => {
+      if (appPhaseIndex > 1) {
+          setAppPhaseIndex(prev => prev - 1);
+      }
+  };
+
+  const generateResults = () => {
+      const selectedIdeas = initialIdeas.filter(idea => votes[idea.id] > 0);
+      return {
+          voter: userName || "Anonymous",
+          timestamp: new Date().toISOString(),
+          selections: selectedIdeas.map(idea => ({
+              id: idea.id,
+              title: idea.title,
+              phase: idea.phase,
+              votes: votes[idea.id]
+          }))
+      };
+  };
+
+  const handleSendEmail = async () => {
+      setIsSending(true);
+      const results = generateResults();
+
+      const message = `Idea Voting Results from ${results.voter}
+
+Timestamp: ${new Date(results.timestamp).toLocaleString()}
+
+Selections:
+${results.selections.map(s => `\n${s.phase} Phase:\n  - ${s.title} (${s.votes} star${s.votes > 1 ? 's' : ''})`).join('\n')}
+
+---
+Full JSON:
+${JSON.stringify(results, null, 2)}`;
+
+      try {
+          const formData = new FormData();
+          formData.append('email', YOUR_EMAIL);
+          formData.append('subject', `Idea Voting Results from ${results.voter}`);
+          formData.append('message', message);
+          formData.append('_captcha', 'false');
+
+          const response = await fetch(`https://formsubmit.co/${YOUR_EMAIL}`, {
+              method: 'POST',
+              body: formData
+          });
+
+          if (response.ok) {
+              setSentSuccess(true);
+              setAppPhaseIndex(4); // Go to completion screen
+          } else {
+              alert("Failed to send. Please try downloading the file instead.");
+          }
+      } catch (error) {
+          console.error("Error sending:", error);
+          alert("Error sending. Please check your connection.");
+      } finally {
+          setIsSending(false);
+      }
+  };
+
+  // --- VIEWS ---
+
+  // 1. Intro View
+  if (appPhaseIndex === 0) {
+      return (
+          <div className="min-h-screen flex flex-col bg-white font-sans text-gray-900 relative">
+              {/* Content - Centered */}
+              <div className="flex-1 flex flex-col items-center justify-center px-16 py-24">
+                  <div className="w-full max-w-2xl text-left">
+                      <h1 className="text-5xl font-semibold mb-8 leading-tight">
+                          I want <span className="text-red-600">YOU</span> to vote
+                      </h1>
+                      
+                      <div className="space-y-6 text-lg leading-relaxed text-gray-800 mb-12" style={{ 
+                          hyphens: 'auto',
+                          hyphenateLimitChars: '6 4 2',
+                          orphans: 3,
+                          widows: 3
+                      }}>
+                          <p>
+                              We are filling the gaps in the <strong>Planning</strong>, <strong>Action</strong>, and <strong>Integration</strong> phases with some activities. Instead of building complex new features, we are exploring how to reuse and chain our existing toolsets into simple but powerful activities.
+                          </p>
+                          <p>
+                              We've got a bunch of simple ideas. Your job is to drag stars to vote on which of these you find would actually drive the most transformation for users (and yourself!)
+                          </p>
+                          <p className="text-gray-600">
+                              I'll collect these votes and use them to help determine the best ones.
+                          </p>
+                      </div>
+
+                      <div className="mb-8">
+                          <label className="block text-lg font-semibold text-gray-900 mb-3">What's your name?</label>
+                          <input 
+                              type="text" 
+                              value={userName}
+                              onChange={(e) => setUserName(e.target.value)}
+                              placeholder="Enter your full name"
+                              className="w-full p-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none transition-colors"
+                          />
+                      </div>
+
+                      <button 
+                          onClick={handleNext}
+                          disabled={!userName.trim()}
+                          className="bg-black text-white px-8 py-4 rounded-full font-bold text-xl hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                          Start Voting
+                      </button>
+                  </div>
+              </div>
+
+              {/* Video - Fixed at bottom */}
+              <div className="fixed bottom-0 left-0 right-0 flex justify-center items-end pointer-events-none">
+                  <video 
+                      autoPlay 
+                      loop 
+                      muted 
+                      playsInline
+                      className="h-64 w-auto object-contain"
+                      style={{ mixBlendMode: 'multiply' }}
+                  >
+                      <source src="/voting_preetoshi.mp4" type="video/mp4" />
+                  </video>
+              </div>
+          </div>
+      );
+  }
+
+  // 2. Complete View
+  if (appPhaseIndex === 4) {
+      return (
+          <div className="min-h-screen flex flex-col bg-white font-sans text-gray-900 relative">
+              {/* Content - Centered */}
+              <div className="flex-1 flex flex-col items-center justify-center px-16 py-24">
+                  <div className="w-full max-w-2xl text-left">
+                      <h1 className="text-5xl font-semibold mb-8 leading-tight">
+                          Sent to Preetoshi!
+                      </h1>
+                      
+                      <div className="space-y-6 text-lg leading-relaxed text-gray-800 mb-12" style={{ 
+                          hyphens: 'auto',
+                          hyphenateLimitChars: '6 4 2',
+                          orphans: 3,
+                          widows: 3
+                      }}>
+                          <p>
+                              Your votes will be carefully reviewed by Preetoshi and he will <strong className="text-gray-900">JUDGE YOU</strong> for any votes that disagree with his own.
+                          </p>
+                          <p className="text-gray-600">
+                              Ha! You messed up. You didn't think you'd be in for shame today did you?
+                          </p>
+                          <p className="text-gray-500 italic">
+                              ... Jk
+                          </p>
+                      </div>
+                  </div>
+              </div>
+
+              {/* Video - Fixed at bottom */}
+              <div className="fixed bottom-0 left-0 right-0 flex justify-center items-end pointer-events-none">
+                  <video 
+                      autoPlay 
+                      loop 
+                      muted 
+                      playsInline
+                      className="h-64 w-auto object-contain"
+                      style={{ mixBlendMode: 'multiply' }}
+                  >
+                      <source src="/laughing_preetoshi.mp4" type="video/mp4" />
+                  </video>
+              </div>
+          </div>
+      );
+  }
+
+  // 3. Canvas View (Phases 1-3)
+  return (
+      <div className="h-screen w-screen bg-gray-100 flex flex-col overflow-hidden font-sans text-gray-900">
           
-          {/* Cut Button */}
-          <button 
-            onClick={() => handleAction('cut')}
-            disabled={!!exitVariant}
-            className="flex-1 group flex flex-col items-center justify-center gap-1 p-3 rounded-2xl bg-gray-50 text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all active:scale-95 border border-gray-100 hover:border-red-100 relative disabled:opacity-50 disabled:pointer-events-none"
-            title="Remove from deck completely"
-          >
-            <X size={24} />
-            <span className="text-[10px] font-extrabold uppercase tracking-wider">Cut</span>
-            
-            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-              Remove from deck
-            </div>
-          </button>
+          <AnimatePresence>
+              {selectedIdea && (
+                  <DetailModal idea={selectedIdea} onClose={() => setSelectedIdea(null)} />
+              )}
+          </AnimatePresence>
 
-           {/* Keep / Not Sure Button */}
-           <button 
-            onClick={() => handleAction('keep')}
-            disabled={!!exitVariant}
-            className="flex-1 group flex flex-col items-center justify-center gap-1 p-3 rounded-2xl bg-gray-50 text-gray-600 hover:bg-gray-100 transition-all active:scale-95 border border-gray-100 relative disabled:opacity-50 disabled:pointer-events-none"
-            title="Keep in rotation for later"
-          >
-            <HelpCircle size={24} />
-            <span className="text-[10px] font-extrabold uppercase tracking-wider">Not Sure</span>
-            
-            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-              Keep in rotation
-            </div>
-          </button>
+          <div className="bg-white border-b border-gray-200 p-4 px-6 flex flex-col items-center z-10 shadow-sm relative">
+                <div className="text-center mb-2">
+                  <div className="flex items-center justify-center gap-2 text-xl font-bold text-gray-900">
+                      {currentPhaseName} Phase
+                      <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full font-mono">
+                          {appPhaseIndex}/3
+                      </span>
+                  </div>
+                  <p className="text-sm text-gray-500 max-w-xl mx-auto mt-1 leading-snug">
+                      {PHASE_DESCRIPTIONS[currentPhaseName]}
+                  </p>
+                </div>
+          </div>
 
-          {/* Love Button */}
-          <button 
-            onClick={() => handleAction('love')}
-            disabled={!!exitVariant}
-            className="flex-[1.5] group flex flex-col items-center justify-center gap-1 p-3 rounded-2xl bg-black text-white hover:bg-gray-800 transition-all active:scale-95 shadow-xl shadow-black/10 relative disabled:opacity-50 disabled:pointer-events-none"
-            title="Mark as favorite and keep"
-          >
-            <Heart size={24} fill={currentIdea?.status === 'loved' ? "currentColor" : "none"} className={currentIdea?.status === 'loved' ? "text-pink-500" : ""} />
-            <span className="text-[10px] font-extrabold uppercase tracking-wider">Love It</span>
-            
-             <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-              Mark favorite & keep
-            </div>
-          </button>
+          <div className="flex-1 bg-gray-50 relative cursor-grab active:cursor-grabbing overflow-hidden">
+              <TransformWrapper
+                  initialScale={1}
+                  initialPositionX={0}
+                  initialPositionY={0}
+                  minScale={0.5}
+                  maxScale={2}
+                  centerOnInit={true}
+                  limitToBounds={false}
+              >
+                  <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full">
+                      <div className="w-[2000px] h-[1500px] flex flex-wrap content-start p-20 gap-8 bg-dot-pattern bg-[length:20px_20px]">
+                          {phaseIdeas.map(idea => (
+                              <CanvasCard 
+                                  key={idea.id} 
+                                  idea={idea} 
+                                  votes={votes[idea.id]} 
+                                  onRemoveVote={handleRemoveVote}
+                                  onViewDetails={setSelectedIdea}
+                                  isHovered={draggedOverId === idea.id}
+                              />
+                          ))}
+                      </div>
+                  </TransformComponent>
+              </TransformWrapper>
+          </div>
 
-        </div>
-        
-        <div className="text-center mt-6">
-             <button onClick={() => setAppPhase('setup')} className="text-xs font-bold text-gray-300 hover:text-gray-500 uppercase tracking-widest transition-colors">
-                Restart / Change Goals
-             </button>
-        </div>
+          <div className="absolute bottom-0 left-0 right-0 p-6 pointer-events-none flex justify-center items-end z-20 overflow-visible">
+              <div 
+                  className={`pointer-events-auto bg-white/90 backdrop-blur-md border shadow-2xl rounded-2xl p-4 flex items-center gap-8 overflow-visible transition-all duration-300
+                      ${draggedOverDock ? 'border-blue-500 ring-4 ring-blue-500/20' : 'border-gray-200'}
+                  `}
+                  data-dock-container
+              >
+                  
+                  <div className="flex flex-col items-center gap-2">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Voting Star Bank</span>
+                      <div className="flex gap-2 bg-gray-100 p-2 rounded-xl inner-shadow overflow-visible">
+                          {availableStars.map((star) => (
+                              <DraggableStar 
+                                  key={star.id} 
+                                  id={star.id}
+                                  onDragStart={handleStarDragStart}
+                                  onDrag={handleStarDrag}
+                                  onDragEnd={handleStarDragEnd}
+                              />
+                          ))}
+                          {availableStars.length === 0 && (
+                              <div className="text-xs font-bold text-gray-400 px-4 py-2">All stars used!</div>
+                          )}
+                      </div>
       </div>
-    </div>
+
+                  <div className="h-full border-l border-gray-200 pl-8 flex items-center gap-4">
+                    {appPhaseIndex > 1 && (
+                        <button 
+                            onClick={handlePrevious}
+                            className="bg-gray-100 text-gray-700 px-4 py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors flex items-center gap-2"
+                        >
+                            <ChevronLeft size={18} /> Previous
+                        </button>
+                    )}
+                    <button 
+                        onClick={handleNext}
+                        disabled={!canProceed || isSending}
+                        className="bg-black text-white px-6 py-4 rounded-xl font-bold hover:bg-gray-800 transition-colors flex items-center gap-2 shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {isSending ? (
+                            <span className="animate-pulse">Sending...</span>
+                        ) : appPhaseIndex === 3 ? (
+                            "Complete"
+                        ) : (
+                            <>Next Phase <ChevronRight size={20} /></>
+                        )}
+        </button>
+                  </div>
+              </div>
+          </div>
+      </div>
   );
 }
