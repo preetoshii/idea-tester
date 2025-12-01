@@ -287,11 +287,18 @@ const RankingOverlay = ({ show, onClose, rankings, isLoading }) => {
                                                 </div>
                                                 <div className="flex items-center gap-2 text-gray-600">
                                                     <Star size={16} fill="currentColor" className="text-yellow-400" />
-                                                    <span className="text-sm font-medium">
+                                                    <span className="text-sm font-medium flex items-center gap-1">
                                                         {item.totalStars} {item.totalStars === 1 ? 'star' : 'stars'} 
                                                         {item.voterCount > 0 && (
-                                                            <span className="text-gray-400 ml-2">
+                                                            <span className="text-gray-400 ml-1 group relative cursor-help">
                                                                 from {item.voterCount} {item.voterCount === 1 ? 'voter' : 'voters'}
+                                                                
+                                                                {/* Tooltip */}
+                                                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                                                                    {item.voterNames && item.voterNames.length > 0 ? item.voterNames.join(', ') : 'Anonymous'}
+                                                                    {/* Arrow */}
+                                                                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                                                                </div>
                                                             </span>
                                                         )}
                                                     </span>
@@ -700,7 +707,8 @@ export default function App() {
                       title: idea.title,
                       phase: idea.phase,
                       totalStars,
-                      voterCount: ideaVoters[id]?.size || 0
+                      voterCount: ideaVoters[id]?.size || 0,
+                      voterNames: Array.from(ideaVoters[id] || [])
                   };
               })
               .filter(item => item !== null)
