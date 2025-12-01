@@ -1,0 +1,68 @@
+[
+  {
+    "voter": "Preetoshi",
+    "timestamp": "2025-12-01T23:12:53.544Z",
+    "selections": [
+      {
+        "id": 3,
+        "title": "The Resource Radar 📡",
+        "phase": "Planning",
+        "votes": 2
+      },
+      {
+        "id": 11,
+        "title": "The Insight Thread 🧵",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 12,
+        "title": "The Re-Ranking 📊",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 23,
+        "title": "The Skill Audit 📊",
+        "phase": "Integration",
+        "votes": 2
+      },
+      {
+        "id": 29,
+        "title": "The Micro-Habit Stacker 🧱",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 36,
+        "title": "The Goal Cleaner 🧹",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 38,
+        "title": "The Buy-In Barometer 🌡️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 39,
+        "title": "The Meeting Detox 🗑️",
+        "phase": "Planning",
+        "votes": 2
+      },
+      {
+        "id": 41,
+        "title": "Name It to Tame It 🏷️",
+        "phase": "Action",
+        "votes": 2
+      },
+      {
+        "id": 42,
+        "title": "The 5-Minute Sprint ⏱️",
+        "phase": "Action",
+        "votes": 2
+      }
+    ]
+  }
+]
