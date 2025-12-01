@@ -557,7 +557,28 @@ export default function App() {
               body: JSON.stringify(results)
           });
 
-          const data = await response.json();
+          // Handle 404 (API route not available - likely running with npm run dev instead of vercel dev)
+          if (response.status === 404) {
+              console.warn("API route not found. For local testing, use 'vercel dev' instead of 'npm run dev'");
+              // Still show success in local dev, but warn user
+              if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                  alert("Note: API routes only work with 'vercel dev'. Your vote wasn't saved, but you can continue testing.");
+                  setTransitionOverlay({ show: true, message: 'Heheh', nextPhase: 4 });
+                  setSentSuccess(true);
+                  return;
+              }
+          }
+
+          // Check if response has content before parsing JSON
+          const contentType = response.headers.get('content-type');
+          let data = {};
+          
+          if (contentType && contentType.includes('application/json')) {
+              const text = await response.text();
+              if (text) {
+                  data = JSON.parse(text);
+              }
+          }
 
           if (response.ok && data.success) {
               // Show transition overlay with "Heheh" before going to completion
@@ -569,7 +590,12 @@ export default function App() {
           }
       } catch (error) {
           console.error("Error saving:", error);
-          alert("Error saving. Please check your connection.");
+          // If it's a JSON parse error and we're on localhost, provide helpful message
+          if (error.message.includes('JSON') && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+              alert("API route not available. For local testing, run 'vercel dev' instead of 'npm run dev'");
+          } else {
+              alert("Error saving. Please check your connection.");
+          }
       } finally {
           setIsSending(false);
       }
@@ -581,7 +607,28 @@ export default function App() {
       
       try {
           const response = await fetch('/api/get-votes');
-          const allVotes = await response.json();
+          
+          // Handle 404 (API route not available)
+          if (response.status === 404) {
+              console.warn("API route not found. For local testing, use 'vercel dev' instead of 'npm run dev'");
+              setRankings([]);
+              setIsLoadingRankings(false);
+              if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                  alert("API route not available. For local testing, run 'vercel dev' instead of 'npm run dev'");
+              }
+              return;
+          }
+          
+          // Check if response has content before parsing JSON
+          const contentType = response.headers.get('content-type');
+          let allVotes = [];
+          
+          if (contentType && contentType.includes('application/json')) {
+              const text = await response.text();
+              if (text) {
+                  allVotes = JSON.parse(text);
+              }
+          }
           
           if (!Array.isArray(allVotes)) {
               setRankings([]);
@@ -629,6 +676,10 @@ export default function App() {
       } catch (error) {
           console.error("Error fetching rankings:", error);
           setRankings([]);
+          // If it's a JSON parse error and we're on localhost, provide helpful message
+          if (error.message && error.message.includes('JSON') && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+              alert("API route not available. For local testing, run 'vercel dev' instead of 'npm run dev'");
+          }
       } finally {
           setIsLoadingRankings(false);
       }
