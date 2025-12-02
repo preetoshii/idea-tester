@@ -31,7 +31,14 @@ const DetailModal = ({ idea, votes, onRemoveVote, onClose, isHovered, onNext, on
     }, [onNext, onPrev, onClose, hasNext, hasPrev]);
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+        <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" 
+            onClick={onClose}
+        >
             {/* Navigation Buttons - Outside Modal */}
             {hasPrev && (
                 <button 
@@ -149,7 +156,7 @@ const DetailModal = ({ idea, votes, onRemoveVote, onClose, isHovered, onNext, on
                     )}
                 </div>
             </motion.div>
-        </div>
+        </motion.div>
     );
 };
 
