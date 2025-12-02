@@ -82,5 +82,77 @@
         "votes": 1
       }
     ]
+  },
+  {
+    "voter": "Fake User",
+    "timestamp": "2025-12-02T00:03:47.798Z",
+    "selections": [
+      {
+        "id": 6,
+        "title": "Wisdom On Demand 🎧",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 16,
+        "title": "The \"If-Then\" Architect 🧠",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 20,
+        "title": "The Decision Compass 🧭",
+        "phase": "Action",
+        "votes": 2
+      },
+      {
+        "id": 27,
+        "title": "The Blind Spot Check 👁️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 29,
+        "title": "The Micro-Habit Stacker 🧱",
+        "phase": "Action",
+        "votes": 2
+      },
+      {
+        "id": 33,
+        "title": "The Time ROI Matrix ⏳",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 38,
+        "title": "The Buy-In Barometer 🌡️",
+        "phase": "Planning",
+        "votes": 2
+      },
+      {
+        "id": 39,
+        "title": "The Meeting Detox 🗑️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 45,
+        "title": "The Flow State Map 🌊",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 46,
+        "title": "The \"Un-Learning\" List 🧠",
+        "phase": "Integration",
+        "votes": 2
+      },
+      {
+        "id": 48,
+        "title": "The Gratitude Graph 🤝",
+        "phase": "Integration",
+        "votes": 1
+      }
+    ]
   }
 ]
