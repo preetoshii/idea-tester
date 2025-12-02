@@ -130,12 +130,6 @@ const DetailModal = ({ idea, votes, onRemoveVote, onClose, isHovered, onNext, on
                             <p>{idea.purpose}</p>
                         </div>
                     )}
-                    {idea.toolsets_used && (
-                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <h3 className="font-bold text-gray-900 uppercase text-xs tracking-wide mb-1">Tools Used</h3>
-                            <p className="font-medium text-gray-800">{idea.toolsets_used}</p>
-                        </div>
-                    )}
                     {idea.how_it_works && (
                         <div>
                             <h3 className="font-bold text-gray-900 uppercase text-xs tracking-wide mb-1">How It Works</h3>
@@ -146,6 +140,12 @@ const DetailModal = ({ idea, votes, onRemoveVote, onClose, isHovered, onNext, on
                         <div>
                             <h3 className="font-bold text-gray-900 uppercase text-xs tracking-wide mb-1">Output</h3>
                             <p className="italic text-gray-600">{idea.output}</p>
+                        </div>
+                    )}
+                    {idea.toolsets_used && (
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <h3 className="font-bold text-gray-900 uppercase text-xs tracking-wide mb-1">Tools Used</h3>
+                            <p className="font-medium text-gray-800">{idea.toolsets_used}</p>
                         </div>
                     )}
                     {idea.why_this_works && (
@@ -213,7 +213,7 @@ const CanvasCard = ({ idea, votes, onRemoveVote, onViewDetails, isHovered }) => 
             <h3 className="font-bold text-lg leading-tight mb-2 pointer-events-none">{idea.title}</h3>
             
             <div className="flex-1 overflow-hidden mb-4 pointer-events-none">
-                <p className="text-sm text-gray-600 line-clamp-3">{idea.purpose}</p>
+                <p className="text-sm text-gray-600">{idea.overview || idea.purpose}</p>
             </div>
 
             {/* Desktop Hover Overlay */}

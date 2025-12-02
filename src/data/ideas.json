@@ -7,6 +7,7 @@
     "journey_phase": "Planning",
     "toolsets_used": "Mind Map → Categories",
     "purpose": "Think through what could go wrong so you can prepare for it.",
+    "overview": "Prepare for what could go wrong, by brainstorming risks and sorting what you can control from what you can't.",
     "how_it_works": "First, you and the AI brainstorm \"Everything that could go wrong\" using a Mind Map. Then, you sort these worries into two buckets: \"Within My Control\" and \"Outside My Control.\"",
     "output": "A clear picture of what you can actually do something about.",
     "why_this_works": "Getting all your worries out of your head helps you see them clearly. Sorting them shows you where to focus your energy instead of spinning on things you can't change."
@@ -19,6 +20,7 @@
     "journey_phase": "Planning",
     "toolsets_used": "Branch Point (x3) → Callout Text",
     "purpose": "Make clear choices about how you'll approach your goal.",
+    "overview": "Define your strategy, by answering 3 either/or questions about your approach to get a clear game plan.",
     "how_it_works": "The AI gives you 3 quick either/or choices about your approach (like \"Fast & Imperfect\" vs. \"Slow & Deliberate\" or \"Go Solo\" vs. \"Work with Others\"). Based on your picks, you get a clear statement about your chosen strategy.",
     "output": "A simple \"game plan\" for how you'll tackle your goal.",
     "why_this_works": "Most people know what they want but get stuck on how to get there. Making these quick choices helps you commit to an approach instead of endlessly debating options."
@@ -31,6 +33,7 @@
     "journey_phase": "Planning",
     "toolsets_used": "Deck → Slider",
     "purpose": "Figure out what resources you need and what you're missing.",
+    "overview": "Assess your resources, by reviewing different types and rating how much you have of each (0-100%).",
     "how_it_works": "You swipe through cards showing different resources (like Budget, Time, Skills, Support). Pick the ones you need for your goal. For each one, a slider asks \"How much of this do you actually have?\" (0-100%).",
     "output": "A clear view of where you're well-equipped and where you need help.",
     "why_this_works": "Instead of trying to think of everything from scratch, the cards remind you what to consider. The sliders help you be honest about what you really have versus what you wish you had."
@@ -43,6 +46,7 @@
     "journey_phase": "Action",
     "toolsets_used": "Mock Chat → Likert Scale",
     "purpose": "Practice a tough conversation or skill before you need it for real.",
+    "overview": "Practice a tough conversation before you need it, by roleplaying with the AI then rating your confidence.",
     "how_it_works": "You practice with the AI playing a specific role (like a skeptical boss or difficult customer). After a 3-minute practice round, you rate how you felt about your performance and confidence. The AI gives you one specific tip based on how it went.",
     "output": "Practice runs under your belt and a sense of what to expect.",
     "why_this_works": "Practicing in a safe space where mistakes don't matter takes the edge off. You can try different approaches and build confidence before the real thing."
@@ -55,6 +59,7 @@
     "journey_phase": "Action (Recurring/Daily)",
     "toolsets_used": "Categories",
     "purpose": "Figure out why you're not doing what you planned to do.",
+    "overview": "Figure out why you're not doing what you planned, by sorting tasks into 'Done,' 'Too Tired,' 'No Time,' or 'Fear/Avoidance.'",
     "how_it_works": "The AI shows you buckets labeled \"Done,\" \"Too Tired,\" \"No Time,\" and \"Fear/Avoidance.\" You drag today's planned tasks into whichever bucket fits. Over time, patterns become clear.",
     "output": "Real data about what's actually stopping you (like \"You're always too tired on Tuesdays\").",
     "why_this_works": "Instead of feeling bad about not doing things, you get specific information about what's in your way. Dragging and dropping is quick and doesn't require you to write out excuses."
@@ -67,6 +72,7 @@
     "journey_phase": "Action",
     "toolsets_used": "SME Council → Basic List",
     "purpose": "Get fresh perspective and motivation when you're stuck.",
+    "overview": "Get fresh perspective when you're stuck, by listening to experts discuss your situation then jotting down insights.",
     "how_it_works": "You describe what's blocking you. The AI creates a 3-minute audio conversation between expert personas (like Brené Brown and Adam Grant) discussing your specific situation. While listening, you jot down insights that resonate.",
     "output": "A mental shift and a list of ideas you can try right away.",
     "why_this_works": "Hearing different voices breaks you out of your own head. It feels like getting advice from experts who understand your situation."
@@ -79,6 +85,7 @@
     "journey_phase": "Action",
     "toolsets_used": "Basic List → Quadrant",
     "purpose": "Sort through your overwhelming to-do list and figure out what actually matters.",
+    "overview": "Sort through your to-do list and figure out what matters, by listing everything then sorting by urgency and importance.",
     "how_it_works": "You dump everything on your mind into a list. Then you sort each item into a grid based on how urgent and how important it is. The AI helps you see what to tackle first and what to ignore.",
     "output": "A clear plan of what to do now and what can wait.",
     "why_this_works": "When everything feels urgent, nothing gets done. Sorting tasks visually helps you see what really needs attention versus what's just noise."
@@ -91,6 +98,7 @@
     "journey_phase": "Integration (Weekly)",
     "toolsets_used": "Categories → Callout Text",
     "purpose": "Look at the week and decide what to keep doing, stop doing, and start doing.",
+    "overview": "Review your week and decide what to start, stop, and continue, by sorting activities into three columns.",
     "how_it_works": "You sort your week's activities into three columns: \"Start,\" \"Stop,\" and \"Continue.\" The AI looks at what you sorted and helps you identify one main thing to focus on next week.",
     "output": "A simple plan for what to change next week.",
     "why_this_works": "It's a proven way to learn from experience. The sorting activity makes it feel more concrete than just thinking about it."
@@ -103,6 +111,7 @@
     "journey_phase": "Integration",
     "toolsets_used": "Canvas Mapping",
     "purpose": "See which activities drain you versus energize you to prevent burnout.",
+    "overview": "See which activities drain you versus energize you, by plotting activities on a grid showing energy drain vs impact.",
     "how_it_works": "You plot your recent activities on a grid: one axis is how much energy it took, the other is how much impact it had. This reveals your \"energy vampires\" (exhausting but pointless) and your \"sweet spots\" (easy wins).",
     "output": "A visual map showing which activities are worth your energy and which aren't.",
     "why_this_works": "When you're tired all the time, it helps to see exactly what's draining you. Often you discover you're spending most of your energy on things that don't even matter."
@@ -115,6 +124,7 @@
     "journey_phase": "Integration",
     "toolsets_used": "Slider → Branch Point",
     "purpose": "Check if your main goal still excites you or needs adjusting.",
+    "overview": "Check if your main goal still excites you, by rating your excitement (0-100) and choosing to pivot or adjust if needed.",
     "how_it_works": "The AI reminds you of your main goal, then asks \"How excited are you about this?\" on a scale of 0-100. If it's below 70, you get a choice: change the goal itself or change how you're approaching it.",
     "output": "Either renewed commitment to your path or permission to pivot.",
     "why_this_works": "Goals shouldn't be set in stone. This quick check helps you avoid wasting time on something that no longer matters to you."
@@ -127,6 +137,7 @@
     "journey_phase": "Integration",
     "toolsets_used": "Contentful Cards → Basic List",
     "purpose": "Connect what you're learning to your actual life.",
+    "overview": "Connect what you're learning to your life, by browsing content related to your challenge then writing how it applies.",
     "how_it_works": "You browse through content cards related to your current challenge (like articles about \"Leading through Change\"). After reading, you write down specific ways this applies to your situation right now.",
     "output": "Practical ideas that fit your specific circumstances.",
     "why_this_works": "It's hard to reflect in a vacuum. Having something to react to helps you make connections you wouldn't think of on your own."
@@ -139,6 +150,7 @@
     "journey_phase": "Integration",
     "toolsets_used": "Priorization",
     "purpose": "Re-examine your priorities based on what you've actually experienced.",
+    "overview": "Re-examine your priorities based on experience, by reordering your original values or goals into a new order.",
     "how_it_works": "The AI shows you your original list of values or goals. You drag them into a new order based on what you've learned recently. No judgment - just honest reordering.",
     "output": "An updated list that reflects what actually matters to you now.",
     "why_this_works": "What you think matters and what actually matters often shift once you start taking action. This lets you adjust without feeling like you're giving up."
@@ -151,6 +163,7 @@
     "journey_phase": "Planning",
     "toolsets_used": "Canvas Mapping",
     "purpose": "Identify who needs to be involved, informed, or engaged to achieve the goal.",
+    "overview": "Identify who needs to be involved to achieve your goal, by plotting key people on a grid showing their support vs influence.",
     "how_it_works": "The AI presents a Canvas Mapping tool (X-Axis: Level of Support, Y-Axis: Level of Influence). The user plots key people in their life (partner, colleague, friend, family member). The AI then asks for one specific way to strengthen connection with a high-influence person who could offer more support.",
     "output": "A visual map of relationship dynamics and a connection strategy.",
     "why_this_works": "Plans often fail not because of bad strategy, but because of overlooked relationships. The visual grid makes \"invisible\" interpersonal dynamics obvious."
@@ -163,6 +176,7 @@
     "journey_phase": "Planning",
     "toolsets_used": "Deck → Categories",
     "purpose": "Reduce overwhelm by thoughtfully distributing responsibilities.",
+    "overview": "Reduce overwhelm by distributing responsibilities, by selecting responsibilities then sorting into 'Only I Can Do,' 'Someone Else Could Help,' and 'Can Let Go.'",
     "how_it_works": "The AI populates a Deck with common responsibilities for the user's situation. The user selects the cards involved in their goal. Then, the user transitions to Categories to sort those cards into: \"Only I Can Do,\" \"Someone Else Could Help,\" and \"Can Let Go.\"",
     "output": "A lighter, focused list of personal responsibilities and tasks to share or release.",
     "why_this_works": "We often assume we have to do everything ourselves. Physically moving a card to \"Someone Else Could Help\" is a psychological permission slip to accept support."
@@ -175,6 +189,7 @@
     "journey_phase": "Planning",
     "toolsets_used": "Basic List → Likert Scale",
     "purpose": "Define what \"Good\" looks and feels like to prevent perfectionism.",
+    "overview": "Define what 'Good' looks like to prevent perfectionism, by listing success indicators then rating the top 3 to distinguish 'Essential' from 'Bonus.'",
     "how_it_works": "The user and AI co-create a Basic List of success indicators (e.g., \"Completed the project,\" \"Family feels connected\"). Then, for the top 3 items, the AI presents a Likert Scale asking: \"What level of achievement would feel satisfying?\" (1=Baseline, 5=Ideal).",
     "output": "A definition of success that distinguishes \"Essential\" from \"Bonus.\"",
     "why_this_works": "Perfectionists often burn out aiming for maximum on everything. This forces them to consciously decide where \"good enough\" is actually good."
@@ -187,6 +202,7 @@
     "journey_phase": "Planning",
     "toolsets_used": "Branch Point → Callout Text",
     "purpose": "Decide ahead of time how you'll handle tough moments.",
+    "overview": "Decide ahead of time how you'll handle tough moments, by choosing between two options for a scenario then locking your choice as a rule.",
     "how_it_works": "The AI presents a scenario like \"If you feel too tired to work out...\" and gives you two options to choose from. Your choice becomes a rule you follow later, like \"If tired, I'll do just 5 minutes.\"",
     "output": "A set of simple rules for handling predictable challenges.",
     "why_this_works": "Making decisions when you're stressed or tired is hard. Deciding now, when you're calm, means you don't have to think in the moment - you just follow your rule."
@@ -199,6 +215,7 @@
     "journey_phase": "Action (Daily Recurring)",
     "toolsets_used": "Deck → Callout Text",
     "purpose": "Pick one theme to guide your day.",
+    "overview": "Pick one theme to guide your day, by choosing from theme options then seeing how to apply it to a specific moment today.",
     "how_it_works": "Each morning, you swipe through cards with themes like \"Courage,\" \"Patience,\" or \"Boundaries.\" Pick one that feels right. The AI then asks you how you'll bring that theme into a specific moment today, like your 2pm meeting.",
     "output": "A single focus that shapes how you show up all day.",
     "why_this_works": "Takes less than a minute but changes how you see your whole day. Instead of just reacting to whatever happens, you have an intention."
@@ -211,6 +228,7 @@
     "journey_phase": "Action",
     "toolsets_used": "Mock Chat",
     "purpose": "Practice saying no without feeling guilty about it.",
+    "overview": "Practice saying no without feeling guilty, by roleplaying with the AI as your boss or friend asking you to take on more work.",
     "how_it_works": "The AI pretends to be your boss or friend asking you to take on something new when you're already swamped. You practice saying no clearly and kindly, without over-explaining or apologizing. Try it a few different ways.",
     "output": "Confidence in setting boundaries when you need to.",
     "why_this_works": "People say yes to too much because saying no feels awkward. Practicing the actual words makes it easier when the moment comes."
@@ -223,6 +241,7 @@
     "journey_phase": "Action",
     "toolsets_used": "Basic List",
     "purpose": "Make the invisible work you do visible so you feel accomplished.",
+    "overview": "Make the invisible work you do visible, by writing down everything you actually did today, especially unexpected tasks and fires you put out.",
     "how_it_works": "Instead of listing what you need to do, write down everything you actually did today - especially the unexpected stuff that came up. All those little fires you put out? They count.",
     "output": "Proof that you got more done than you thought.",
     "why_this_works": "High achievers tend to focus on what's left to do, not what they've accomplished. Seeing everything you handled today fights that feeling of \"I got nothing done.\""
@@ -235,6 +254,7 @@
     "journey_phase": "Action",
     "toolsets_used": "Quadrant",
     "purpose": "Make tough decisions quickly using logic instead of feelings.",
+    "overview": "Make tough decisions quickly using logic, by plotting your choice on a grid showing risk vs reversibility.",
     "how_it_works": "When you're stuck on a choice (like \"Should I launch now or wait?\"), you plot it on a grid based on risk and whether you can undo it later. If it's low risk and reversible, the answer becomes obvious: \"Why not try it?\"",
     "output": "A clear push toward action (or caution) based on facts.",
     "why_this_works": "Turning decisions into coordinates takes the emotion out. You can see the difference between decisions you can take back and ones you can't."
@@ -247,6 +267,7 @@
     "journey_phase": "Integration",
     "toolsets_used": "Basic List → Categories",
     "purpose": "Sort feedback so you can use the good stuff and let go of the rest.",
+    "overview": "Sort feedback so you can use the good stuff, by listing all feedback then sorting into 'Valid & I'll Use This,' 'Interesting but Not Now,' or 'Not Helpful.'",
     "how_it_works": "Dump all the feedback or criticism you've gotten into a list. Then sort each piece into buckets: \"Valid & I'll Use This,\" \"Interesting but Not Now,\" or \"Not Helpful.\"",
     "output": "A clear list of what to actually work on, with the sting taken out of unhelpful criticism.",
     "why_this_works": "Criticism can feel overwhelming. Sorting it helps you see that not all feedback deserves your energy - you get to choose what to keep and what to ignore."
@@ -259,6 +280,7 @@
     "journey_phase": "Integration",
     "toolsets_used": "Categories",
     "purpose": "See if you're actually living your values or just talking about them.",
+    "overview": "See if you're actually living your values, by sorting this week's activities into columns labeled with your top 3 values (plus 'Doesn't Fit').",
     "how_it_works": "The AI shows you your top 3 values and creates columns for each one (plus a \"Doesn't Fit\" column). You drag this week's activities into whichever value they served. The empty columns tell the real story.",
     "output": "A reality check on where your time actually goes.",
     "why_this_works": "It's one thing to say family is important, another to see that nothing you did this week went in that column. The visual makes the gap impossible to ignore."
@@ -271,6 +293,7 @@
     "journey_phase": "Integration",
     "toolsets_used": "Likert Scale (x5)",
     "purpose": "Track your skill growth with actual numbers.",
+    "overview": "Track your skill growth with numbers, by rating yourself on 5 skills related to your goal and seeing your improvement over time.",
     "how_it_works": "The AI presents 5 skills related to your goal (like \"Delegation\" or \"Speaking Up\"). You rate yourself on each one. If you've done this before, you'll see how much you've improved - like going from a 2 to a 4.",
     "output": "Real proof that you're getting better at things.",
     "why_this_works": "Growth happens slowly and it's hard to notice. Seeing your numbers actually go up validates that all your effort is paying off."
@@ -283,6 +306,7 @@
     "journey_phase": "Integration",
     "toolsets_used": "Image Display → Callout Text",
     "purpose": "Name where you are in your journey to create closure and move forward.",
+    "overview": "Name where you are in your journey to create closure, by viewing the Hero's Journey arc then seeing your chapter title.",
     "how_it_works": "The AI shows you an image of the Hero's Journey arc and asks \"Where are you right now?\" (like \"The Ordeal\" or \"The Reward\"). Based on your answer, the AI gives this phase of your life a chapter title.",
     "output": "A name for what you've just been through.",
     "why_this_works": "We make sense of life through stories. Naming a difficult period (like \"The Month of Chaos\") helps you mentally close that chapter and start fresh."
@@ -295,6 +319,7 @@
     "journey_phase": "Planning",
     "toolsets_used": "Basic List → Categories",
     "purpose": "Define what's in and what's out before you even start.",
+    "overview": "Define what's in and what's out before you start, by listing everything you could do then sorting into 'Doing Now' and 'Parking Lot for Later.'",
     "how_it_works": "List everything you could possibly do for this project or goal. Then sort them into \"Doing Now\" and \"Parking Lot for Later.\" Be ruthless about what goes in the parking lot.",
     "output": "Clear boundaries that protect you from taking on too much.",
     "why_this_works": "Projects grow like weeds if you let them. Physically moving tasks to a \"later\" pile satisfies your brain's need to capture ideas without committing to actually do them all."
@@ -307,6 +332,7 @@
     "journey_phase": "Planning",
     "toolsets_used": "Priorization",
     "purpose": "Figure out what needs to happen first, second, third.",
+    "overview": "Figure out what needs to happen first, second, third, by dragging your action steps into chronological order.",
     "how_it_works": "The AI shows you all your action steps jumbled up. You drag them into the right order from start to finish. The AI double-checks: \"Does this step actually need to happen before that one?\"",
     "output": "A clear path from where you are to where you're going.",
     "why_this_works": "People often confuse what's important with what comes first. This forces you to think about what actually unlocks the next step."
@@ -319,6 +345,7 @@
     "journey_phase": "Planning",
     "toolsets_used": "SME Council",
     "purpose": "Get outside perspective on your plan before you start.",
+    "overview": "Get outside perspective on your plan, by listening to experts discuss what you might be missing.",
     "how_it_works": "You briefly explain your plan. The AI creates a conversation between expert personas (like a Project Manager and Risk Expert) who point out what you might be missing or haven't thought about.",
     "output": "A list of blind spots you hadn't considered.",
     "why_this_works": "We're often too close to our own plans to see what's missing. Getting \"outside eyes\" helps you spot problems before they happen."
@@ -331,6 +358,7 @@
     "journey_phase": "Planning",
     "toolsets_used": "Branch Point (x3) → Callout Text",
     "purpose": "Find the real reason this goal matters to you.",
+    "overview": "Find the real reason this goal matters to you, by answering 'Why does this matter?' three times, each time digging deeper.",
     "how_it_works": "The AI asks \"Why does this matter?\" and gives you options to choose from. Then it asks \"And why does THAT matter?\" This happens three times, digging deeper each time. Your final answer becomes your anchor.",
     "output": "The deep, personal reason you're really doing this (like \"It's not about the promotion, it's about feeling secure\").",
     "why_this_works": "Surface reasons (\"I want more money\") fall apart when things get hard. Deep reasons (\"I want my kids to have opportunities\") keep you going."
@@ -343,6 +371,7 @@
     "journey_phase": "Action",
     "toolsets_used": "Basic List → Branch Point",
     "purpose": "Build new habits by attaching them to things you already do.",
+    "overview": "Build new habits by attaching them to things you already do, by listing your existing habits, picking one, then choosing 'before' or 'after' to create your habit recipe.",
     "how_it_works": "List your existing daily habits (brushing teeth, making coffee, commuting). Pick one. The AI asks: \"Do you want to do your new habit before or after this?\" This creates a recipe like \"After I pour coffee, I write one sentence.\"",
     "output": "A specific plan that piggybacks on what you already do automatically.",
     "why_this_works": "Starting new habits from scratch is hard. Attaching them to existing routines means you don't need willpower - the old habit triggers the new one."
@@ -355,6 +384,7 @@
     "journey_phase": "Action",
     "toolsets_used": "Mock Chat",
     "purpose": "Test how your difficult email will land before you send it.",
+    "overview": "Test how your difficult email will land, by pasting your draft where the AI responds as the recipient showing how your tone comes across.",
     "how_it_works": "Paste your draft email (or type it fresh) and the AI responds as the person who'll receive it, showing you how your tone comes across. Keep tweaking until the AI recipient responds well.",
     "output": "An email you can send with confidence.",
     "why_this_works": "Most people worry about how their writing will be received. Testing it first removes the anxiety of hitting \"Send.\""
@@ -367,6 +397,7 @@
     "journey_phase": "Action",
     "toolsets_used": "Categories",
     "purpose": "Clear your head by getting distractions out and sorting them.",
+    "overview": "Clear your head by getting distractions out, by sorting them into 'Internal Thoughts' and 'External Interruptions.'",
     "how_it_works": "When your mind is scattered, sort your distractions into two buckets: \"Internal Thoughts\" and \"External Interruptions.\" The AI helps you see which type is dominant and what to do about it.",
     "output": "A clearer head and a specific way to handle what's distracting you.",
     "why_this_works": "Naming what's distracting you takes away its power. Realizing \"Oh, this is mostly just my own worry\" helps you refocus."
@@ -379,6 +410,7 @@
     "journey_phase": "Action (Daily/Weekly)",
     "toolsets_used": "Slider (x3)",
     "purpose": "Quick check-in on your head, heart, and body.",
+    "overview": "Quick check-in on your head, heart, and body, by rating three things: Head (Clarity), Heart (Motivation), and Hands (Energy).",
     "how_it_works": "Three simple sliders:\n- Head (Clarity): \"Do I understand what to do?\"\n- Heart (Motivation): \"Do I want to do this?\"\n- Hands (Energy): \"Do I have the energy to act?\"",
     "output": "Clarity on what's actually holding you back.",
     "why_this_works": "\"I'm stuck\" is too vague to fix. This shows you exactly what needs attention - confusion needs a plan, low motivation needs a break, low energy needs rest."
@@ -391,6 +423,7 @@
     "journey_phase": "Integration",
     "toolsets_used": "Quadrant",
     "purpose": "Evaluate if time spent aligns with what matters most.",
+    "overview": "Evaluate if time spent aligns with what matters, by plotting this week's activities on a grid showing Time Consumed vs Value Generated.",
     "how_it_works": "The AI asks the user to plot this week's activities and commitments on a Quadrant (X: Time Consumed, Y: Value/Fulfillment Generated).",
     "output": "Visual identification of \"Energy Drains\" (High Time/Low Value).",
     "why_this_works": "We often feel busy but not fulfilled. Seeing a recurring commitment in the \"High Time / Low Value\" quadrant triggers immediate reassessment of priorities."
@@ -403,6 +436,7 @@
     "journey_phase": "Integration",
     "toolsets_used": "Mind Map",
     "purpose": "Find patterns in your struggles or wins.",
+    "overview": "Find patterns in your struggles or wins, by viewing your recent challenges or successes, drawing connections between them, then naming what connects them all.",
     "how_it_works": "The AI creates a mind map with 3-4 recent challenges or successes you've mentioned. You draw lines between ones that feel connected, then name what connects them all.",
     "output": "An \"aha moment\" about the real issue (like \"All of these are really about not getting enough sleep\").",
     "why_this_works": "When you look at problems one by one, you miss the pattern. Seeing connections helps you find the root cause that linear thinking misses."
@@ -415,6 +449,7 @@
     "journey_phase": "Integration",
     "toolsets_used": "Callout Text → Image Display",
     "purpose": "Solidify learning by teaching it.",
+    "overview": "Solidify learning by teaching it, by dictating a message to your future self then seeing it displayed.",
     "how_it_works": "The AI asks, \"If you could send a message to yourself next Monday, what would it be?\" The user dictates it. The AI displays it nicely in Callout Text, then uses Image Display to show a \"Message Sent\" visual (reinforcement).",
     "output": "A specific intention set for the next cycle.",
     "why_this_works": "The \"Proteus Effect\"—we learn best when we teach/advise. It shifts the user from \"Passive Learner\" to \"Wise Advisor.\""
@@ -427,6 +462,7 @@
     "journey_phase": "Integration",
     "toolsets_used": "Deck",
     "purpose": "Prune outdated goals to free up mental RAM.",
+    "overview": "Prune outdated goals to free up mental RAM, by reviewing your active goals/commitments and choosing to 'Drop/Pause' or 'Keep/Renew.'",
     "how_it_works": "The AI puts the user's active goals/commitments onto cards in a Deck. The user swipes Left to \"Drop/Pause\" and Right to \"Keep/Renew.\"",
     "output": "A curated, lighter list of commitments.",
     "why_this_works": "We rarely officially \"quit\" goals; we just let them haunt us. Swiping Left is a ritual act of letting go, reducing guilt and freeing energy."
@@ -439,6 +475,7 @@
     "journey_phase": "Planning",
     "toolsets_used": "Categories",
     "purpose": "Get clear on what's actually your responsibility versus what isn't.",
+    "overview": "Get clear on what's actually your responsibility, by sorting tasks into 'My Core Work,' 'Doing as a Favor,' and 'Someone Else's Job.'",
     "how_it_works": "Sort your current tasks into three buckets: \"My Core Work,\" \"Doing as a Favor,\" and \"Someone Else's Job.\" Be honest about which pile things really belong in.",
     "output": "Permission to stop doing things that aren't yours to do.",
     "why_this_works": "Unclear boundaries lead to burnout and resentment. Seeing tasks in the \"Someone Else's Job\" bucket makes it obvious what you can stop doing."
@@ -451,6 +488,7 @@
     "journey_phase": "Planning",
     "toolsets_used": "Deck → Slider",
     "purpose": "Assess the level of support you have for your goal.",
+    "overview": "Assess the level of support you have for your goal, by reviewing key people then rating how supportive each one is (0-100%).",
     "how_it_works": "The user swipes through a Deck of key people in their life (Partner, Friend, Colleague, Family member). For each selected person, a Slider appears: \"How supportive are they of this goal right now?\" (0-100%).",
     "output": "A \"heat map\" of support levels showing exactly who might need more communication or context.",
     "why_this_works": "Goals often fail because we assume people understand and support what we're doing. This forces a realistic assessment of the social landscape."
@@ -463,6 +501,7 @@
     "journey_phase": "Planning",
     "toolsets_used": "Priorization",
     "purpose": "Reclaim time by releasing low-value commitments.",
+    "overview": "Reclaim time by releasing low-value commitments, by ranking your recurring obligations from 'Most Meaningful' to 'Energy Drain' then reconsidering the bottom 20%.",
     "how_it_works": "The user lists their recurring obligations and commitments in the Priorization tool. They rank them from \"Most Meaningful\" to \"Energy Drain.\" The AI prompts the user to reconsider or release the bottom 20%.",
     "output": "Immediate breathing room in schedule and mental space.",
     "why_this_works": "We rarely audit our commitments. Ranking forces a comparison, making it obvious which obligations are \"zombies\" (continuing without purpose)."
@@ -475,6 +514,7 @@
     "journey_phase": "Planning",
     "toolsets_used": "Deck → Branch Point",
     "purpose": "Plan for what could go wrong without spiraling into anxiety.",
+    "overview": "Plan for what could go wrong without spiraling, by reviewing disruption scenarios, picking your biggest fear, then choosing 'Pause' or 'Pivot.'",
     "how_it_works": "Swipe through cards showing common disruptions (\"Budget Cut,\" \"Key Person Leaves,\" \"Tech Fails\"). Pick the one you fear most. Then choose: would you pause everything or find another way? The AI helps you think through the pivot.",
     "output": "A backup plan for your biggest worry.",
     "why_this_works": "Vague fears are paralyzing. But when you imagine something specific and make a plan for it, the fear loses its grip because you know you'll handle it."
@@ -487,6 +527,7 @@
     "journey_phase": "Action",
     "toolsets_used": "Deck → Callout Text",
     "purpose": "Name what you're feeling to help calm yourself down.",
+    "overview": "Name what you're feeling to help calm yourself down, by choosing from emotion options then seeing your feeling acknowledged.",
     "how_it_works": "When you're stressed, swipe through emotion cards (\"Overwhelmed,\" \"Resentful,\" \"Inadequate,\" \"Lonely\"). Pick the one that fits. The AI acknowledges it: \"It makes sense you feel that way because...\"",
     "output": "Feeling understood and less overwhelmed.",
     "why_this_works": "Putting a name to what you're feeling actually calms your brain down. The cards help when you're too stressed to find the right words yourself."
@@ -499,6 +540,7 @@
     "journey_phase": "Action",
     "toolsets_used": "Basic List",
     "purpose": "Get unstuck by doing the tiniest possible things.",
+    "overview": "Get unstuck by doing the tiniest possible things, by listing 3 tiny 5-minute tasks (like 'Open the document,' 'Write the subject line').",
     "how_it_works": "The AI asks: \"What can you do in the next 5 minutes?\" List 3 tiny tasks (like \"Open the document,\" \"Write the subject line,\" \"Find that phone number\"). The AI says: \"Go. I'll wait here.\"",
     "output": "Movement. Once you start, it's easier to keep going.",
     "why_this_works": "The hardest part is starting. Once you're moving, even a little bit, momentum takes over and you often keep going past the 5 minutes."
@@ -511,6 +553,7 @@
     "journey_phase": "Action",
     "toolsets_used": "Mock Chat",
     "purpose": "Make sure your opening grabs attention from the start.",
+    "overview": "Make sure your opening grabs attention, by typing your opening 3 sentences where the AI plays a distracted audience member, then refining until they pay attention.",
     "how_it_works": "Type your opening 3 sentences into a practice chat. The AI plays a distracted audience member who either gets hooked or starts checking their phone. Keep refining until the AI pays attention.",
     "output": "An opening that makes people want to hear more.",
     "why_this_works": "You have about 30 seconds to capture attention. If the opening doesn't work, nothing else matters. This helps you nail those crucial first moments."
@@ -523,6 +566,7 @@
     "journey_phase": "Action",
     "toolsets_used": "Quadrant",
     "purpose": "Figure out when and where your bad habits happen.",
+    "overview": "Figure out when and where your bad habits happen, by plotting recent slip-ups on a grid showing time of day vs who you were with.",
     "how_it_works": "Plot recent slip-ups on a grid showing time of day and who you were with (alone or with others). Patterns quickly emerge.",
     "output": "Clear patterns (like \"You always cave when you're alone at night\" or \"This happens every time you're with that group\").",
     "why_this_works": "Habits are tied to specific situations. Once you see the pattern, you can change the situation instead of relying on willpower alone."
@@ -535,6 +579,7 @@
     "journey_phase": "Integration",
     "toolsets_used": "Quadrant",
     "purpose": "Find the sweet spot between boredom and overwhelm.",
+    "overview": "Find the sweet spot between boredom and overwhelm, by plotting your current projects on a grid showing your skill level vs how challenging they are.",
     "how_it_works": "Plot your current projects on a grid based on your skill level and how challenging they are. This shows you which ones are too easy (boring), too hard (stressful), or just right (engaging).",
     "output": "Specific tweaks to make your work more engaging (like \"Make Project A harder so you're not bored\").",
     "why_this_works": "We do our best work when the challenge matches our skills. Too easy and we're bored; too hard and we're anxious. This helps you find the balance."
@@ -547,6 +592,7 @@
     "journey_phase": "Integration",
     "toolsets_used": "Basic List → Priorization",
     "purpose": "Identify old habits that used to help but now hold you back.",
+    "overview": "Identify old habits that used to help but now hold you back, by listing behaviors to stop then ranking them by harmfulness.",
     "how_it_works": "List behaviors you need to stop doing. Then rank them by which ones are most harmful to your current goals. Focus on dropping the top one or two.",
     "output": "A \"stop doing\" list with clear priorities.",
     "why_this_works": "What got you here won't get you there. Sometimes success means letting go of things that used to work (like doing everything yourself) but have become obstacles."
@@ -559,6 +605,7 @@
     "journey_phase": "Integration",
     "toolsets_used": "Slider (x2)",
     "purpose": "Separate what you can control from what you can't.",
+    "overview": "Separate what you can control from what you can't, by rating a recent win or loss on two things: how much effort you put in (0-100%) and how good the outcome was (0-100%).",
     "how_it_works": "Look at a recent win or loss. Rate two things:\n- How much effort did you put in? (0-100%)\n- How good was the outcome? (0-100%)\nCompare the two numbers.",
     "output": "An honest view of whether you succeeded through effort or luck (and whether you failed despite doing everything right).",
     "why_this_works": "We often judge ourselves by results we can't control. This helps you see when you did great work that didn't pay off (yet) or got lucky despite poor effort."
@@ -571,8 +618,9 @@
     "journey_phase": "Integration",
     "toolsets_used": "Mind Map",
     "purpose": "See how many people are actually supporting you.",
+    "overview": "See how many people are actually supporting you, by creating a map with 'My Success' in the center, adding people who helped you, then drawing connections between them.",
     "how_it_works": "Create a mind map with \"My Success\" in the center. Add people who helped you this week as branches. Draw connections showing how they support each other too.",
     "output": "A visual web showing you're more supported than you realized.",
     "why_this_works": "High achievers often feel alone. Seeing the web of people helping you (and each other) reminds you that you're part of something bigger."
   }
-]
+  ]
