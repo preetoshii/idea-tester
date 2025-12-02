@@ -935,44 +935,62 @@ export default function App() {
                 </div>
           </div>
 
-          <div className="flex-1 bg-gray-50 relative cursor-grab active:cursor-grabbing overflow-hidden">
-              <TransformWrapper
-                  initialScale={1}
-                  initialPositionX={0}
-                  initialPositionY={0}
-                  minScale={0.5}
-                  maxScale={2}
-                  centerOnInit={true}
-                  limitToBounds={false}
-              >
-                  <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full">
-                      <div className="w-[2000px] h-[1500px] flex flex-wrap content-start p-20 gap-8 bg-dot-pattern bg-[length:20px_20px]">
-                          {phaseIdeas.map(idea => (
-                              <CanvasCard 
-                                  key={idea.id} 
-                                  idea={idea} 
-                                  votes={votes[idea.id]} 
-                                  onRemoveVote={handleRemoveVote}
-                                  onViewDetails={setSelectedIdea}
-                                  isHovered={draggedOverId === idea.id}
-                              />
-                          ))}
+          <div className="flex-1 bg-gray-50 relative overflow-hidden">
+              {/* Mobile: Scrollable List (No Pan/Zoom) */}
+              <div className="block md:hidden w-full h-full overflow-y-auto p-4 pb-48 space-y-4">
+                  {phaseIdeas.map(idea => (
+                      <div key={idea.id} className="w-full">
+                          <CanvasCard 
+                              idea={idea} 
+                              votes={votes[idea.id]} 
+                              onRemoveVote={handleRemoveVote}
+                              onViewDetails={setSelectedIdea}
+                              isHovered={draggedOverId === idea.id}
+                          />
                       </div>
-                  </TransformComponent>
-              </TransformWrapper>
+                  ))}
+              </div>
+
+              {/* Desktop: Canvas (Pan/Zoom) */}
+              <div className="hidden md:block w-full h-full cursor-grab active:cursor-grabbing">
+                  <TransformWrapper
+                      initialScale={1}
+                      initialPositionX={0}
+                      initialPositionY={0}
+                      minScale={0.5}
+                      maxScale={2}
+                      centerOnInit={true}
+                      limitToBounds={false}
+                  >
+                      <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full">
+                          <div className="w-[2000px] h-[1500px] flex flex-wrap content-start p-20 gap-8 bg-dot-pattern bg-[length:20px_20px]">
+                              {phaseIdeas.map(idea => (
+                                  <CanvasCard 
+                                      key={idea.id} 
+                                      idea={idea} 
+                                      votes={votes[idea.id]} 
+                                      onRemoveVote={handleRemoveVote}
+                                      onViewDetails={setSelectedIdea}
+                                      isHovered={draggedOverId === idea.id}
+                                  />
+                              ))}
+                          </div>
+                      </TransformComponent>
+                  </TransformWrapper>
+              </div>
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 p-6 pointer-events-none flex justify-center items-end z-20 overflow-visible">
+          <div className="absolute bottom-0 left-0 right-0 p-0 md:p-6 pointer-events-none flex justify-center items-end z-20 overflow-visible">
               <div 
-                  className={`pointer-events-auto bg-white/90 backdrop-blur-md border shadow-2xl rounded-2xl p-4 flex items-center gap-8 overflow-visible transition-all duration-300
+                  className={`pointer-events-auto bg-white/90 backdrop-blur-md border-t md:border border-gray-200 shadow-2xl rounded-t-2xl md:rounded-2xl p-4 w-full md:w-auto flex flex-col md:flex-row items-center gap-4 md:gap-8 overflow-visible transition-all duration-300
                       ${draggedOverDock ? 'border-blue-500 ring-4 ring-blue-500/20' : 'border-gray-200'}
                   `}
                   data-dock-container
               >
                   
-                  <div className="flex flex-col items-center gap-2">
+                  <div className="flex flex-col items-center gap-2 w-full md:w-auto">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Voting Star Bank</span>
-                      <div className="flex gap-2 bg-gray-100 p-2 rounded-xl inner-shadow overflow-visible">
+                      <div className="flex justify-center gap-2 bg-gray-100 p-2 rounded-xl inner-shadow overflow-visible w-full md:w-auto min-h-[60px]">
                           {availableStars.map((star) => (
                               <DraggableStar 
                                   key={star.id} 
@@ -983,24 +1001,25 @@ export default function App() {
                               />
                           ))}
                           {availableStars.length === 0 && (
-                              <div className="text-xs font-bold text-gray-400 px-4 py-2">All stars used!</div>
+                              <div className="text-xs font-bold text-gray-400 px-4 py-2 self-center">All stars used!</div>
                           )}
                       </div>
-      </div>
+                  </div>
 
-                  <div className="h-full border-l border-gray-200 pl-8 flex items-center gap-4">
-                    {appPhaseIndex > 1 && (
+                  <div className="w-full md:w-auto md:h-full md:border-l border-gray-200 md:pl-8 flex items-center justify-between gap-4">
+                    {appPhaseIndex > 1 ? (
                         <button 
                             onClick={handlePrevious}
-                            className="bg-gray-100 text-gray-700 px-4 py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors flex items-center gap-2"
+                            className="flex-1 md:flex-none bg-gray-100 text-gray-700 px-4 py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors flex justify-center items-center gap-2"
                         >
-                            <ChevronLeft size={18} /> Previous
+                            <ChevronLeft size={18} /> <span className="hidden md:inline">Previous</span><span className="md:hidden">Back</span>
                         </button>
-                    )}
+                    ) : <div className="flex-1 md:hidden"></div>}
+                    
                     <button 
                         onClick={handleNext}
                         disabled={!canProceed || isSending}
-                        className="bg-black text-white px-6 py-4 rounded-xl font-bold hover:bg-gray-800 transition-colors flex items-center gap-2 shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex-[2] md:flex-none bg-black text-white px-6 py-4 rounded-xl font-bold hover:bg-gray-800 transition-colors flex justify-center items-center gap-2 shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isSending ? (
                             <span className="animate-pulse">Sending...</span>
@@ -1009,7 +1028,7 @@ export default function App() {
                         ) : (
                             <>Next Phase <ChevronRight size={20} /></>
                         )}
-        </button>
+                    </button>
                   </div>
               </div>
           </div>
