@@ -194,7 +194,7 @@ const TransitionOverlay = ({ show, message, onComplete }) => {
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: isExiting ? 0.9 : 1, opacity: isExiting ? 0 : 1 }}
                         transition={{ duration: 0.3 }}
-                        className="text-6xl font-semibold text-gray-900"
+                        className="text-4xl md:text-6xl font-semibold text-gray-900 text-center px-8 md:px-0 leading-tight"
                     >
                         {message}
                     </motion.div>
