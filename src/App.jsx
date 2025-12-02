@@ -126,9 +126,6 @@ const CanvasCard = ({ idea, votes, onRemoveVote, onViewDetails, isHovered }) => 
             
             <div className="flex-1 overflow-hidden mb-4 pointer-events-none">
                 <p className="text-sm text-gray-600 line-clamp-3">{idea.purpose}</p>
-                <div className="mt-3 text-xs text-blue-600 font-semibold flex items-center gap-1">
-                    <Info size={14} /> Tap to read full details
-                </div>
             </div>
 
             <div className="mt-auto border-t pt-3 flex justify-between items-center min-h-[40px]" onClick={e => e.stopPropagation()}>
@@ -321,7 +318,7 @@ const PhaseHeader = ({ phaseName, phaseIndex, description }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     return (
-        <div className="bg-white border-b border-gray-200 p-4 px-6 flex flex-col items-center z-10 shadow-sm relative transition-all">
+        <div className="bg-white border-b border-gray-200 p-4 px-6 md:py-8 flex flex-col items-center z-10 shadow-sm relative transition-all">
             <div className="text-center w-full">
                 <div 
                     className="flex items-center justify-center gap-2 text-xl font-bold text-gray-900 cursor-pointer md:cursor-default"
@@ -336,11 +333,18 @@ const PhaseHeader = ({ phaseName, phaseIndex, description }) => {
                     </span>
                 </div>
                 
+                <div className="mt-2 text-xs font-medium text-blue-600 flex items-center justify-center gap-1 md:hidden">
+                    <Info size={12} /> Tap any card to read full details
+                </div>
+
                 {/* Desktop: Always visible. Mobile: Conditionally visible */}
-                <div className={`overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-40 opacity-100 mt-2' : 'max-h-0 opacity-0 md:max-h-40 md:opacity-100 md:mt-1'}`}>
+                <div className={`overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-40 opacity-100 mt-2' : 'max-h-0 opacity-0 md:max-h-40 md:opacity-100 md:mt-4'}`}>
                     <p className="text-sm text-gray-500 max-w-xl mx-auto leading-snug">
                         {description}
                     </p>
+                    <div className="hidden md:flex mt-4 text-xs font-medium text-blue-600 items-center justify-center gap-1">
+                        <Info size={12} /> Click any card to read full details
+                    </div>
                 </div>
             </div>
         </div>
