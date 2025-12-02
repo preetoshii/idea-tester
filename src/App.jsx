@@ -130,14 +130,32 @@ const DraggableStar = ({ id, onDragStart, onDragEnd, onDrag }) => {
 };
 
 const CanvasCard = ({ idea, votes, onRemoveVote, onViewDetails, isHovered }) => {
+    // We need to differentiate between a drag and a click
+    const dragRef = React.useRef({ startX: 0, startY: 0 });
+
+    const handlePointerDown = (e) => {
+        dragRef.current = { startX: e.clientX, startY: e.clientY };
+    };
+
+    const handlePointerUp = (e) => {
+        const diffX = Math.abs(e.clientX - dragRef.current.startX);
+        const diffY = Math.abs(e.clientY - dragRef.current.startY);
+        
+        // Only treat as click if moved less than 5px
+        if (diffX < 5 && diffY < 5) {
+            onViewDetails(idea);
+        }
+    };
+
     return (
         <div 
-            className={`bg-white rounded-xl shadow-md border transition-all duration-300 w-80 p-4 flex flex-col relative group select-none cursor-pointer
+            className={`bg-white rounded-xl shadow-md border transition-all duration-300 w-80 p-4 flex flex-col relative group select-none cursor-grab active:cursor-grabbing
                 ${isHovered ? 'border-blue-500 ring-4 ring-blue-500/20 shadow-xl scale-[1.02] z-10' : 'border-gray-200 hover:shadow-lg'}
             `}
             data-idea-id={idea.id}
-            onClick={() => onViewDetails(idea)}
-            title="Click to Read Details"
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}
+            title="Drag to move, Click to Read Details"
         >
             <div className="flex justify-between items-start mb-2 pointer-events-none">
                 <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-[10px] uppercase font-bold rounded-full">
@@ -470,37 +488,63 @@ export default function App() {
       return initialIdeas.filter(i => i.phase === currentPhaseName);
   }, [currentPhaseName]);
 
-  // Generate random positions for ideas once
-  const ideaPositions = useMemo(() => {
+  const [cardPositions, setCardPositions] = useState({});
+
+  // Initialize positions once (either from saved state or random generation)
+  useEffect(() => {
       const positions = {};
       // Simple grid-based randomization to avoid overlaps but look scattered
-      const GRID_COLS = 4;
-      const CELL_WIDTH = 400;
-      const CELL_HEIGHT = 350;
-      const CANVAS_PADDING = 100;
+      const GRID_COLS = 3;
+      const CELL_WIDTH = 450;
+      const CELL_HEIGHT = 400;
+      const CANVAS_PADDING = 150;
       
       initialIdeas.forEach((idea, index) => {
           // Group by phase to keep them somewhat organized but scattered
-          // We'll just use a deterministic hash based on ID to keep positions stable across renders
           const seed = idea.id * 12345; 
-          const randomX = (Math.sin(seed) * 0.5 + 0.5); // 0-1
-          const randomY = (Math.cos(seed) * 0.5 + 0.5); // 0-1
+          const randomX = (Math.sin(seed) * 0.5 + 0.5); 
+          const randomY = (Math.cos(seed) * 0.5 + 0.5); 
           
-          // Assign to a grid cell based on index
+          // Use the phase filtering logic to determine roughly where it would fall in a filtered list
+          // This is an approximation since we want persistent positions across phases if we were showing all
+          // But here we are showing per phase. To keep it simple and consistent:
+          // We will just generate positions for ALL ideas, but they will only be rendered if in current phase
+          
+          // Actually, let's just use the index from the JSON to determine a "global slot"
           const col = index % GRID_COLS;
           const row = Math.floor(index / GRID_COLS);
           
-          // Add jitter within the cell
-          const x = CANVAS_PADDING + (col * CELL_WIDTH) + (randomX * 100 - 50);
+          const x = CANVAS_PADDING + (col * CELL_WIDTH) + (randomX * 150 - 75);
           const y = CANVAS_PADDING + (row * CELL_HEIGHT) + (randomY * 100 - 50);
-          
-          // Add some rotation for messy look
-          const rotate = (randomX * 6) - 3; // -3 to +3 degrees
+          const rotate = (randomX * 8) - 4;
           
           positions[idea.id] = { x, y, rotate };
       });
-      return positions;
+      setCardPositions(positions);
   }, []);
+
+  const handleCardDragEnd = (id, info) => {
+      const { x, y } = info.offset;
+      // Update the position in state
+      // Note: Framer Motion drag is relative to the starting position unless we control x/y directly.
+      // However, for this "messy canvas" style, it's often easier to let visual state be handled by DOM
+      // But if we want persistence (switching phases and back), we need to update state.
+      
+      // Actually, simpler approach for this specific request:
+      // Since we use absolute positioning, we can just update the absolute coordinates.
+      
+      setCardPositions(prev => {
+          const current = prev[id];
+          return {
+              ...prev,
+              [id]: {
+                  ...current,
+                  x: current.x + info.offset.x,
+                  y: current.y + info.offset.y
+              }
+          };
+      });
+  };
 
   // Get available stars for current phase
   const availableStars = useMemo(() => {
@@ -1123,38 +1167,24 @@ export default function App() {
                   >
                       <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full">
                           <div className="w-[2000px] h-[2000px] relative bg-dot-pattern bg-[length:20px_20px]">
-                              {phaseIdeas.map((idea, index) => {
-                                  const pos = ideaPositions[idea.id] || { x: 0, y: 0, rotate: 0 };
-                                  // Recalculate position relative to the filtered list to keep them compact
-                                  // We can't reuse the global positions because phases might be far apart in the original list
-                                  // So let's generate a local position based on the *current phase index*
+                              {phaseIdeas.map((idea) => {
+                                  const pos = cardPositions[idea.id] || { x: 0, y: 0, rotate: 0 };
                                   
-                                  const GRID_COLS = 3;
-                                  const CELL_WIDTH = 450;
-                                  const CELL_HEIGHT = 400;
-                                  const CANVAS_PADDING = 150;
-                                  
-                                  const seed = idea.id * 12345; 
-                                  const randomX = (Math.sin(seed) * 0.5 + 0.5); 
-                                  const randomY = (Math.cos(seed) * 0.5 + 0.5); 
-                                  
-                                  const col = index % GRID_COLS;
-                                  const row = Math.floor(index / GRID_COLS);
-                                  
-                                  const left = CANVAS_PADDING + (col * CELL_WIDTH) + (randomX * 150 - 75);
-                                  const top = CANVAS_PADDING + (row * CELL_HEIGHT) + (randomY * 100 - 50);
-                                  const rotate = (randomX * 8) - 4;
-
                                   return (
-                                      <div 
+                                      <motion.div 
                                           key={idea.id}
+                                          drag
+                                          dragMomentum={false}
+                                          onDragEnd={(e, info) => handleCardDragEnd(idea.id, info)}
+                                          initial={{ x: pos.x, y: pos.y, rotate: pos.rotate }}
+                                          animate={{ x: pos.x, y: pos.y, rotate: pos.rotate }}
                                           style={{
                                               position: 'absolute',
-                                              left: `${left}px`,
-                                              top: `${top}px`,
-                                              transform: `rotate(${rotate}deg)`,
+                                              left: 0, 
+                                              top: 0,
                                               zIndex: draggedOverId === idea.id ? 50 : 10
                                           }}
+                                          className="nopan" // Class for react-zoom-pan-pinch to ignore
                                       >
                                           <CanvasCard 
                                               idea={idea} 
@@ -1163,7 +1193,7 @@ export default function App() {
                                               onViewDetails={setSelectedIdea}
                                               isHovered={draggedOverId === idea.id}
                                           />
-                                      </div>
+                                      </motion.div>
                                   );
                               })}
                           </div>
