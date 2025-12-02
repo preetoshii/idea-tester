@@ -520,10 +520,34 @@ export default function App() {
 
   const currentPhaseName = appPhaseIndex > 0 && appPhaseIndex <= 3 ? PHASES[appPhaseIndex - 1] : null;
   
+  // Get or create session seed for randomization (consistent within session, random across sessions)
+  const sessionSeed = useMemo(() => {
+      const stored = sessionStorage.getItem('ideaSessionSeed');
+      if (stored) return parseInt(stored);
+      const seed = Math.floor(Math.random() * 1000000);
+      sessionStorage.setItem('ideaSessionSeed', seed.toString());
+      return seed;
+  }, []);
+  
+  // Shuffle function using seed
+  const seededShuffle = (array, seed) => {
+      const shuffled = [...array];
+      let random = seed;
+      for (let i = shuffled.length - 1; i > 0; i--) {
+          // Simple seeded random number generator
+          random = (random * 9301 + 49297) % 233280;
+          const j = Math.floor((random / 233280) * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+  };
+  
   const phaseIdeas = useMemo(() => {
       if (!currentPhaseName) return [];
-      return initialIdeas.filter(i => i.phase === currentPhaseName);
-  }, [currentPhaseName]);
+      const filtered = initialIdeas.filter(i => i.phase === currentPhaseName);
+      // Shuffle using session seed + phase name to get different order per phase but consistent within session
+      return seededShuffle(filtered, sessionSeed + currentPhaseName.charCodeAt(0));
+  }, [currentPhaseName, sessionSeed]);
 
   // Generate random positions for ideas once
   const ideaPositions = useMemo(() => {
