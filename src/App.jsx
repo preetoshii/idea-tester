@@ -406,9 +406,18 @@ const PhaseHeader = ({ phaseName, phaseIndex, description }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     return (
-        <div className="bg-white border-b border-gray-200 p-4 px-6 md:py-8 flex flex-col items-center z-10 shadow-sm relative transition-all">
+        <motion.div 
+            key={phaseName}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="bg-white border-b border-gray-200 p-4 px-6 md:py-8 flex flex-col items-center z-10 shadow-sm relative transition-all"
+        >
             <div className="text-center w-full">
-                <div 
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 0.1 }}
                     className="flex items-center justify-center gap-2 text-xl font-bold text-gray-900 cursor-pointer md:cursor-default"
                     onClick={() => setIsExpanded(!isExpanded)}
                 >
@@ -419,23 +428,28 @@ const PhaseHeader = ({ phaseName, phaseIndex, description }) => {
                     <span className="md:hidden text-gray-400 ml-1">
                         {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                     </span>
-                </div>
+                </motion.div>
                 
                 <div className="mt-2 text-xs font-medium text-blue-600 flex items-center justify-center gap-1 md:hidden">
                     <Info size={12} /> Tap any card to read full details
                 </div>
 
                 {/* Desktop: Always visible. Mobile: Conditionally visible */}
-                <div className={`overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-40 opacity-100 mt-2' : 'max-h-0 opacity-0 md:max-h-40 md:opacity-100 md:mt-4'}`}>
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 0.2 }}
+                    className={`overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-40 opacity-100 mt-2' : 'max-h-0 opacity-0 md:max-h-40 md:opacity-100 md:mt-4'}`}
+                >
                     <p className="text-sm text-gray-500 max-w-xl mx-auto leading-relaxed">
                         {description}
                     </p>
                     <div className="hidden md:flex mt-4 text-xs font-medium text-blue-600 items-center justify-center gap-1">
                         <Info size={12} /> Click any card to read full details
                     </div>
-                </div>
+                </motion.div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 
@@ -1224,8 +1238,14 @@ export default function App() {
 
               {/* Mobile: Scrollable List (No Pan/Zoom) */}
               <div className="block md:hidden w-full h-full overflow-y-auto p-4 pb-48 space-y-4">
-                  {phaseIdeas.map(idea => (
-                      <div key={idea.id} className="w-full">
+                  {phaseIdeas.map((idea, index) => (
+                      <motion.div 
+                          key={`${currentPhaseName}-${idea.id}`}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4, delay: index * 0.05 }}
+                          className="w-full"
+                      >
                           <CanvasCard 
                               idea={idea} 
                               votes={votes[idea.id]} 
@@ -1233,7 +1253,7 @@ export default function App() {
                               onViewDetails={setSelectedIdea}
                               isHovered={draggedOverId === idea.id}
                           />
-                      </div>
+                      </motion.div>
                   ))}
               </div>
 
@@ -1274,8 +1294,16 @@ export default function App() {
                                   const rotate = (randomX * 8) - 4;
 
                                   return (
-                                      <div 
-                                          key={idea.id}
+                                      <motion.div 
+                                          key={`${currentPhaseName}-${idea.id}`}
+                                          initial={{ opacity: 0, scale: 0.8 }}
+                                          animate={{ opacity: 1, scale: 1 }}
+                                          transition={{ 
+                                              duration: 0.4, 
+                                              delay: index * 0.03,
+                                              type: "spring",
+                                              stiffness: 100
+                                          }}
                                           style={{
                                               position: 'absolute',
                                               left: `${left}px`,
@@ -1291,7 +1319,7 @@ export default function App() {
                                               onViewDetails={setSelectedIdea}
                                               isHovered={draggedOverId === idea.id}
                                           />
-                                      </div>
+                                      </motion.div>
                                   );
                               })}
                           </div>
