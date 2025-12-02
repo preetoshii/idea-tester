@@ -16,18 +16,73 @@ const YOUR_EMAIL = "preetoshi@betterup.co";
 
 // --- COMPONENTS ---
 
-const DetailModal = ({ idea, votes, onRemoveVote, onClose, isHovered }) => {
+const DetailModal = ({ idea, votes, onRemoveVote, onClose, isHovered, onNext, onPrev, hasNext, hasPrev }) => {
     if (!idea) return null;
+
+    // Handle keyboard navigation
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'ArrowLeft' && hasPrev) onPrev();
+            if (e.key === 'ArrowRight' && hasNext) onNext();
+            if (e.key === 'Escape') onClose();
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [onNext, onPrev, onClose, hasNext, hasPrev]);
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+            {/* Navigation Buttons - Outside Modal */}
+            {hasPrev && (
+                <button 
+                    onClick={(e) => { e.stopPropagation(); onPrev(); }}
+                    className="absolute left-4 md:left-8 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full backdrop-blur-md transition-all hover:scale-110 z-50 hidden md:flex"
+                    title="Previous Idea (Left Arrow)"
+                >
+                    <ChevronLeft size={32} />
+                </button>
+            )}
+            
+            {hasNext && (
+                <button 
+                    onClick={(e) => { e.stopPropagation(); onNext(); }}
+                    className="absolute right-4 md:right-8 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full backdrop-blur-md transition-all hover:scale-110 z-50 hidden md:flex"
+                    title="Next Idea (Right Arrow)"
+                >
+                    <ChevronRight size={32} />
+                </button>
+            )}
+
             <motion.div 
+                key={idea.id} // Key ensures animation triggers on change
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ type: "spring", duration: 0.5 }}
                 className={`bg-white w-full max-w-2xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col relative transition-all duration-200 ${isHovered ? 'ring-4 ring-blue-500 ring-opacity-50 scale-[1.02]' : ''}`}
                 onClick={e => e.stopPropagation()}
                 data-idea-id={idea.id}
             >
+                {/* Mobile Navigation Overlay (Tap zones on sides?) - Optional but sticking to visible buttons for clarity */}
+                <div className="md:hidden flex justify-between absolute top-1/2 -translate-y-1/2 w-full px-2 pointer-events-none">
+                    {hasPrev ? (
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); onPrev(); }}
+                            className="p-2 bg-black/20 text-white rounded-full backdrop-blur-sm pointer-events-auto"
+                        >
+                            <ChevronLeft size={24} />
+                        </button>
+                    ) : <div></div>}
+                    {hasNext && (
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); onNext(); }}
+                            className="p-2 bg-black/20 text-white rounded-full backdrop-blur-sm pointer-events-auto"
+                        >
+                            <ChevronRight size={24} />
+                        </button>
+                    )}
+                </div>
+
                 {/* Drag Overlay Highlight */}
                 {isHovered && <div className="absolute inset-0 border-4 border-blue-500 z-50 rounded-2xl pointer-events-none"></div>}
 
@@ -882,6 +937,23 @@ export default function App() {
 
   // --- VIEWS ---
 
+  // Helper for modal navigation
+  const handleModalNext = () => {
+      if (!selectedIdea) return;
+      const currentIndex = phaseIdeas.findIndex(i => i.id === selectedIdea.id);
+      if (currentIndex < phaseIdeas.length - 1) {
+          setSelectedIdea(phaseIdeas[currentIndex + 1]);
+      }
+  };
+
+  const handleModalPrev = () => {
+      if (!selectedIdea) return;
+      const currentIndex = phaseIdeas.findIndex(i => i.id === selectedIdea.id);
+      if (currentIndex > 0) {
+          setSelectedIdea(phaseIdeas[currentIndex - 1]);
+      }
+  };
+
   // 1. Intro View
   if (appPhaseIndex === 0) {
       return (
@@ -1084,6 +1156,10 @@ export default function App() {
                       onRemoveVote={handleRemoveVote}
                       onClose={() => setSelectedIdea(null)} 
                       isHovered={draggedOverId === selectedIdea.id}
+                      onNext={handleModalNext}
+                      onPrev={handleModalPrev}
+                      hasNext={phaseIdeas.findIndex(i => i.id === selectedIdea.id) < phaseIdeas.length - 1}
+                      hasPrev={phaseIdeas.findIndex(i => i.id === selectedIdea.id) > 0}
                   />
               )}
           </AnimatePresence>
