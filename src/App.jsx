@@ -427,7 +427,7 @@ const PhaseHeader = ({ phaseName, phaseIndex, description }) => {
 
                 {/* Desktop: Always visible. Mobile: Conditionally visible */}
                 <div className={`overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-40 opacity-100 mt-2' : 'max-h-0 opacity-0 md:max-h-40 md:opacity-100 md:mt-4'}`}>
-                    <p className="text-sm text-gray-500 max-w-xl mx-auto leading-snug">
+                    <p className="text-sm text-gray-500 max-w-xl mx-auto leading-relaxed">
                         {description}
                     </p>
                     <div className="hidden md:flex mt-4 text-xs font-medium text-blue-600 items-center justify-center gap-1">
