@@ -1130,9 +1130,9 @@ export default function App() {
                                   // So let's generate a local position based on the *current phase index*
                                   
                                   const GRID_COLS = 3;
-                                  const CELL_WIDTH = 450;
-                                  const CELL_HEIGHT = 400;
-                                  const CANVAS_PADDING = 150;
+                                  const CELL_WIDTH = 420; // Slightly wider than 380
+                                  const CELL_HEIGHT = 380; // Slightly taller than 340
+                                  const CANVAS_PADDING = 120; // More padding
                                   
                                   const seed = idea.id * 12345; 
                                   const randomX = (Math.sin(seed) * 0.5 + 0.5); 
@@ -1141,8 +1141,9 @@ export default function App() {
                                   const col = index % GRID_COLS;
                                   const row = Math.floor(index / GRID_COLS);
                                   
-                                  const left = CANVAS_PADDING + (col * CELL_WIDTH) + (randomX * 150 - 75);
-                                  const top = CANVAS_PADDING + (row * CELL_HEIGHT) + (randomY * 100 - 50);
+                                  // Reduced jitter range (was 150 -> 100 for X, 100 -> 60 for Y)
+                                  const left = CANVAS_PADDING + (col * CELL_WIDTH) + (randomX * 100 - 50);
+                                  const top = CANVAS_PADDING + (row * CELL_HEIGHT) + (randomY * 60 - 30);
                                   const rotate = (randomX * 8) - 4;
 
                                   return (
