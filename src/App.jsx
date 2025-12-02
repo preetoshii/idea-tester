@@ -128,7 +128,14 @@ const CanvasCard = ({ idea, votes, onRemoveVote, onViewDetails, isHovered }) => 
                 <p className="text-sm text-gray-600 line-clamp-3">{idea.purpose}</p>
             </div>
 
-            <div className="mt-auto border-t pt-3 flex justify-between items-center min-h-[40px]" onClick={e => e.stopPropagation()}>
+            {/* Desktop Hover Overlay */}
+            <div className="absolute inset-0 bg-black/60 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 hidden md:flex items-center justify-center z-20 pointer-events-none">
+                <span className="text-white font-semibold text-lg bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm">
+                    Read more (plz)
+                </span>
+            </div>
+
+            <div className="mt-auto border-t pt-3 flex justify-between items-center min-h-[40px] relative z-30" onClick={e => e.stopPropagation()}>
                 <div className="flex gap-1">
                     {[...Array(votes || 0)].map((_, i) => (
                         <motion.div 
