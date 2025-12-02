@@ -1060,8 +1060,8 @@ export default function App() {
                               type="text" 
                               value={userName}
                               onChange={(e) => setUserName(e.target.value)}
-                              placeholder="Enter your full name"
-                              className="w-full p-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none transition-colors"
+                              placeholder="Enter your first name"
+                              className="w-full p-4 text-lg bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none transition-colors"
                           />
                       </div>
 
