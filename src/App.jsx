@@ -347,12 +347,65 @@ const PhaseHeader = ({ phaseName, phaseIndex, description }) => {
     );
 };
 
+// Mobile Warning Modal
+const MobileWarningModal = ({ onClose }) => (
+    <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[99999] bg-black/90 backdrop-blur-md flex items-center justify-center p-8"
+    >
+        <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl"
+        >
+            <div className="mb-6">
+                <div className="mx-auto w-16 h-16 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mb-4">
+                    <Info size={32} />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Heads up!</h2>
+                <p className="text-gray-600 leading-relaxed mb-4">
+                    This is kinda hard to do on mobile... Use desktop if you can.
+                </p>
+                <p className="text-gray-600 leading-relaxed italic">
+                    But if you choose not to, well I won't stop you.
+                </p>
+                <p className="text-gray-400 text-sm mt-4 font-medium">
+                    - Preetoshi
+                </p>
+            </div>
+            <button
+                onClick={onClose}
+                className="w-full bg-black text-white py-4 rounded-xl font-bold text-lg hover:bg-gray-800 transition-colors active:scale-95"
+            >
+                Continue Anyway
+            </button>
+        </motion.div>
+    </motion.div>
+);
+
 export default function App() {
   const [appPhaseIndex, setAppPhaseIndex] = useState(0); 
   const [votes, setVotes] = useState({}); 
   const [selectedIdea, setSelectedIdea] = useState(null);
   const [draggedOverId, setDraggedOverId] = useState(null);
   const [draggedOverDock, setDraggedOverDock] = useState(false);
+  const [showMobileWarning, setShowMobileWarning] = useState(false);
+  
+  // Check for mobile on mount
+  useEffect(() => {
+      const isMobile = window.innerWidth < 768;
+      // Only show if mobile and haven't dismissed it this session
+      if (isMobile && !sessionStorage.getItem('mobileWarningDismissed')) {
+          setShowMobileWarning(true);
+      }
+  }, []);
+
+  const handleDismissWarning = () => {
+      setShowMobileWarning(false);
+      sessionStorage.setItem('mobileWarningDismissed', 'true');
+  };
   
   // Transition overlay state
   const [transitionOverlay, setTransitionOverlay] = useState({ show: false, message: '', nextPhase: null });
@@ -848,6 +901,11 @@ export default function App() {
                   message={transitionOverlay.message}
                   onComplete={() => transitionOverlay.nextPhase !== null && performPhaseTransition(transitionOverlay.nextPhase)}
               />
+
+              {/* Mobile Warning */}
+              <AnimatePresence>
+                  {showMobileWarning && <MobileWarningModal onClose={handleDismissWarning} />}
+              </AnimatePresence>
           </div>
       );
   }
