@@ -316,6 +316,37 @@ const RankingOverlay = ({ show, onClose, rankings, isLoading }) => {
     );
 };
 
+// Phase Header Component (Internal)
+const PhaseHeader = ({ phaseName, phaseIndex, description }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    return (
+        <div className="bg-white border-b border-gray-200 p-4 px-6 flex flex-col items-center z-10 shadow-sm relative transition-all">
+            <div className="text-center w-full">
+                <div 
+                    className="flex items-center justify-center gap-2 text-xl font-bold text-gray-900 cursor-pointer md:cursor-default"
+                    onClick={() => setIsExpanded(!isExpanded)}
+                >
+                    {phaseName} Phase
+                    <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full font-mono">
+                        {phaseIndex}/3
+                    </span>
+                    <span className="md:hidden text-gray-400 ml-1">
+                        {isExpanded ? <ChevronRight className="rotate-90" size={16} /> : <ChevronRight size={16} />}
+                    </span>
+                </div>
+                
+                {/* Desktop: Always visible. Mobile: Conditionally visible */}
+                <div className={`overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-40 opacity-100 mt-2' : 'max-h-0 opacity-0 md:max-h-40 md:opacity-100 md:mt-1'}`}>
+                    <p className="text-sm text-gray-500 max-w-xl mx-auto leading-snug">
+                        {description}
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 export default function App() {
   const [appPhaseIndex, setAppPhaseIndex] = useState(0); 
   const [votes, setVotes] = useState({}); 
@@ -921,19 +952,11 @@ export default function App() {
               )}
           </AnimatePresence>
 
-          <div className="bg-white border-b border-gray-200 p-4 px-6 flex flex-col items-center z-10 shadow-sm relative">
-                <div className="text-center mb-2">
-                  <div className="flex items-center justify-center gap-2 text-xl font-bold text-gray-900">
-                      {currentPhaseName} Phase
-                      <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full font-mono">
-                          {appPhaseIndex}/3
-                      </span>
-                  </div>
-                  <p className="text-sm text-gray-500 max-w-xl mx-auto mt-1 leading-snug">
-                      {PHASE_DESCRIPTIONS[currentPhaseName]}
-                  </p>
-                </div>
-          </div>
+          <PhaseHeader 
+              phaseName={currentPhaseName} 
+              phaseIndex={appPhaseIndex} 
+              description={PHASE_DESCRIPTIONS[currentPhaseName]} 
+          />
 
           <div className="flex-1 bg-gray-50 relative overflow-hidden">
               {/* Mobile: Scrollable List (No Pan/Zoom) */}
