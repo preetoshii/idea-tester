@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import initialIdeas from './data/ideas.json';
-import { Check, X, Settings, ChevronRight, ChevronLeft, Heart, HelpCircle, Download, Copy, ZoomIn, Star, Maximize2, Info, Send, User, BarChart3 } from 'lucide-react';
+import { Check, X, Settings, ChevronRight, ChevronLeft, ChevronDown, ChevronUp, Heart, HelpCircle, Download, Copy, ZoomIn, Star, Maximize2, Info, Send, User, BarChart3 } from 'lucide-react';
 
 const PHASES = ["Planning", "Action", "Integration"];
 
@@ -332,7 +332,7 @@ const PhaseHeader = ({ phaseName, phaseIndex, description }) => {
                         {phaseIndex}/3
                     </span>
                     <span className="md:hidden text-gray-400 ml-1">
-                        {isExpanded ? <ChevronRight className="rotate-90" size={16} /> : <ChevronRight size={16} />}
+                        {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                     </span>
                 </div>
                 
