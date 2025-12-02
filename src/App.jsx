@@ -511,6 +511,7 @@ export default function App() {
   const [showRankings, setShowRankings] = useState(false);
   const [rankings, setRankings] = useState([]);
   const [isLoadingRankings, setIsLoadingRankings] = useState(false);
+  const [showZoomHint, setShowZoomHint] = useState(false);
 
   const cardRectsRef = React.useRef([]);
   const dockRectRef = React.useRef(null);
@@ -602,6 +603,19 @@ export default function App() {
           setStarsByPhase(prev => ({ ...prev, [currentPhaseName]: newStars }));
       }
   }, [currentPhaseName, starsByPhase]);
+
+  // Show zoom/pan hint on first phase (desktop only)
+  useEffect(() => {
+      if (appPhaseIndex === 1 && window.innerWidth >= 768) {
+          setShowZoomHint(true);
+          const timer = setTimeout(() => {
+              setShowZoomHint(false);
+          }, 4000);
+          return () => clearTimeout(timer);
+      } else {
+          setShowZoomHint(false);
+      }
+  }, [appPhaseIndex]);
 
   // Sound helper
   const playSound = (filename) => {
@@ -1191,6 +1205,23 @@ export default function App() {
           />
 
           <div className="flex-1 bg-gray-50 relative overflow-hidden">
+              {/* Zoom/Pan Hint Overlay - Desktop only, first phase only */}
+              <AnimatePresence>
+                  {showZoomHint && (
+                      <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none"
+                      >
+                          <div className="bg-black/80 text-white px-6 py-3 rounded-full backdrop-blur-sm text-lg font-semibold">
+                              Zoom and pan
+                          </div>
+                      </motion.div>
+                  )}
+              </AnimatePresence>
+
               {/* Mobile: Scrollable List (No Pan/Zoom) */}
               <div className="block md:hidden w-full h-full overflow-y-auto p-4 pb-48 space-y-4">
                   {phaseIdeas.map(idea => (
