@@ -44,13 +44,13 @@ const DetailModal = ({ idea, votes, onRemoveVote, onClose, isHovered }) => {
                                         key={i} 
                                         initial={{ scale: 0 }} 
                                         animate={{ scale: 1 }} 
-                                        className="text-yellow-400 cursor-pointer hover:scale-110 transition-transform group/star"
+                                        className="text-yellow-400 cursor-pointer hover:scale-110 transition-transform group/star relative"
                                         onClick={(e) => { e.stopPropagation(); onRemoveVote(idea.id); }}
                                         title="Click to remove star"
                                     >
                                         <Star size={32} fill="currentColor" />
-                                        <div className="absolute top-full left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover/star:opacity-100 transition-opacity pointer-events-none whitespace-nowrap mt-1 z-50">
-                                            Click to remove star
+                                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/star:opacity-100 transition-opacity">
+                                            <X size={20} className="text-red-600 drop-shadow-md" strokeWidth={3} />
                                         </div>
                                     </motion.div>
                                 ))}
@@ -161,20 +161,20 @@ const CanvasCard = ({ idea, votes, onRemoveVote, onViewDetails, isHovered }) => 
                 </span>
             </div>
 
-            <div className="mt-auto border-t pt-3 flex justify-between items-center min-h-[40px] relative z-30" onClick={e => e.stopPropagation()}>
+            <div className="mt-auto border-t pt-3 flex justify-between items-center min-h-[40px] relative z-50" onClick={e => e.stopPropagation()}>
                 <div className="flex gap-1">
                     {[...Array(votes || 0)].map((_, i) => (
                         <motion.div 
                             key={i} 
                             initial={{ scale: 0 }} 
                             animate={{ scale: 1 }} 
-                            className="text-yellow-400 cursor-pointer hover:scale-110 transition-transform group/star"
+                            className="text-yellow-400 cursor-pointer hover:scale-110 transition-transform group/star relative"
                             onClick={(e) => { e.stopPropagation(); onRemoveVote(idea.id); }}
                             title="Click to remove star"
                         >
                             <Star size={32} fill="currentColor" />
-                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover/star:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                                Click to remove star
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/star:opacity-100 transition-opacity">
+                                <X size={20} className="text-red-600 drop-shadow-md" strokeWidth={3} />
                             </div>
                         </motion.div>
                     ))}
