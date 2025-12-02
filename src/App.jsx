@@ -12,6 +12,7 @@ const PHASE_DESCRIPTIONS = {
     "Integration": "The user looks back at their week to see what worked and what didn't. This prevents them from making the same mistakes twice. Which activities best help someone learn from their experience?"
 };
 
+
 const YOUR_EMAIL = "preetoshi@betterup.co"; 
 
 // --- COMPONENTS ---
@@ -838,18 +839,21 @@ export default function App() {
       setIsSending(true);
       const results = generateResults();
 
-      const handleFallback = async () => {
+      // Always copy to clipboard as a backup
+      const copyToClipboard = async () => {
           try {
               await navigator.clipboard.writeText(JSON.stringify(results, null, 2));
-              alert("Automatic upload failed. Your results have been COPIED to your clipboard.\n\nPlease paste and send them to Preetoshi (Slack/Email).");
-              setTransitionOverlay({ show: true, message: 'Heheh', nextPhase: 4 });
-              setSentSuccess(false);
+              return true;
           } catch (err) {
               console.error("Clipboard copy failed:", err);
-              alert("Upload failed. Please download the results manually on the next screen.");
-              setTransitionOverlay({ show: true, message: 'Heheh', nextPhase: 4 });
-              setSentSuccess(false);
+              return false;
           }
+      };
+
+      const handleFallback = async () => {
+          await copyToClipboard();
+          setTransitionOverlay({ show: true, message: 'Heheh', nextPhase: 4 });
+          setSentSuccess(false);
       };
 
       try {
@@ -864,11 +868,11 @@ export default function App() {
           // Handle 404 (API route not available - likely running with npm run dev instead of vercel dev)
           if (response.status === 404) {
               console.warn("API route not found. For local testing, use 'vercel dev' instead of 'npm run dev'");
-              // Still show success in local dev, but warn user
+              // Treat as failure - show clipboard message
               if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                  alert("Note: API routes only work with 'vercel dev'. Your vote wasn't saved, but you can continue testing.");
+                  await copyToClipboard();
                   setTransitionOverlay({ show: true, message: 'Heheh', nextPhase: 4 });
-                  setSentSuccess(true);
+                  setSentSuccess(false);
                   return;
               }
           }
@@ -885,18 +889,22 @@ export default function App() {
           }
 
           if (response.ok && data.success) {
+              await copyToClipboard();
               // Show transition overlay with "Heheh" before going to completion
               setTransitionOverlay({ show: true, message: 'Heheh', nextPhase: 4 });
               setSentSuccess(true);
           } else {
               console.error("Save error:", data);
+              await copyToClipboard();
               await handleFallback();
           }
       } catch (error) {
           console.error("Error saving:", error);
-          // If it's a JSON parse error and we're on localhost, provide helpful message
+          await copyToClipboard();
+          // If it's a JSON parse error and we're on localhost, treat as failure
           if (error.message.includes('JSON') && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-              alert("API route not available. For local testing, run 'vercel dev' instead of 'npm run dev'");
+              setTransitionOverlay({ show: true, message: 'Heheh', nextPhase: 4 });
+              setSentSuccess(false);
           } else {
               await handleFallback();
           }
@@ -1131,7 +1139,7 @@ export default function App() {
                       </div>
 
                       <h1 className="text-5xl font-semibold mb-8 leading-tight">
-                          Sent to Preetoshi!
+                          {sentSuccess ? "Sent to Preetoshi!" : "Your votes copied to clipboard!"}
                       </h1>
                       
                       <div className="space-y-6 text-lg leading-relaxed text-gray-800 mb-12" style={{ 
@@ -1140,25 +1148,52 @@ export default function App() {
                           orphans: 3,
                           widows: 3
                       }}>
-                          <p>
-                              Your votes will be carefully reviewed by Preetoshi and he will <strong className="text-gray-900">JUDGE YOU</strong> for any votes that disagree with his own.
-                          </p>
-                          <p className="text-gray-600">
-                              Ha! You messed up. You didn't think you'd be in for shame today did you?
-                          </p>
-                          <p className="text-gray-500 italic">
-                              ... Jk
-                          </p>
+                          {!sentSuccess && (
+                              <p>
+                                  <strong className="text-gray-900">Something went wrong with sending the data, so please paste your votes in a slack message to Preetoshi.</strong> Your votes will be carefully reviewed by Preetoshi and he will judge you for any votes that disagree with his own.
+                              </p>
+                          )}
+                          {sentSuccess && (
+                              <>
+                                  <p>
+                                      Your votes will be carefully reviewed by Preetoshi and he will <strong className="text-gray-900">JUDGE YOU</strong> for any votes that disagree with his own.
+                                  </p>
+                                  <p className="text-gray-600">
+                                      Ha! You messed up. You didn't think you'd be in for shame today did you?
+                                  </p>
+                                  <p className="text-gray-500 italic">
+                                      ... Jk
+                                  </p>
+                              </>
+                          )}
                       </div>
 
-                      {/* View Rankings Button */}
-                      <button 
-                          onClick={fetchRankings}
-                          className="bg-black text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-colors flex items-center gap-2"
-                      >
-                          <BarChart3 size={20} />
-                          View All Votes
-                      </button>
+                      {/* Action Buttons */}
+                      <div className="flex flex-col sm:flex-row gap-4">
+                          <button 
+                              onClick={fetchRankings}
+                              className="bg-black text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-colors flex items-center gap-2"
+                          >
+                              <BarChart3 size={20} />
+                              View All Votes
+                          </button>
+                          <button 
+                              onClick={async () => {
+                                  try {
+                                      const results = generateResults();
+                                      await navigator.clipboard.writeText(JSON.stringify(results, null, 2));
+                                      alert("Your votes copied to clipboard!");
+                                  } catch (err) {
+                                      console.error("Clipboard copy failed:", err);
+                                      alert("Failed to copy to clipboard. Please try again.");
+                                  }
+                              }}
+                              className="bg-gray-200 text-gray-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-300 transition-colors flex items-center gap-2"
+                          >
+                              <Copy size={20} />
+                              Copy Your Votes
+                          </button>
+                      </div>
                   </div>
               </div>
 
