@@ -127,7 +127,7 @@ const CanvasCard = ({ idea, votes, onRemoveVote, onViewDetails, isHovered }) => 
             <div className="flex-1 overflow-hidden mb-4 pointer-events-none">
                 <p className="text-sm text-gray-600 line-clamp-3">{idea.purpose}</p>
                 <div className="mt-3 text-xs text-blue-600 font-semibold flex items-center gap-1">
-                    <Info size={14} /> Read full details
+                    <Info size={14} /> Tap to read full details
                 </div>
             </div>
 
