@@ -732,9 +732,9 @@ export default function App() {
   // 1. Intro View
   if (appPhaseIndex === 0) {
       return (
-          <div className="min-h-screen flex flex-col bg-white font-sans text-gray-900 relative">
-              {/* Content - Centered */}
-              <div className="flex-1 flex flex-col items-center justify-center px-16 py-24">
+          <div className="min-h-screen flex flex-col bg-white font-sans text-gray-900 relative overflow-y-auto">
+              {/* Content - Centered with padding for video */}
+              <div className="flex-1 flex flex-col items-center justify-center px-8 md:px-16 py-24 pb-[30vh] relative z-10">
                   <div className="w-full max-w-2xl text-left">
                       <h1 className="text-5xl font-semibold mb-8 leading-tight">
                           I want <span className="text-red-600">YOU</span> to vote
@@ -783,7 +783,7 @@ export default function App() {
                   initial={{ y: '100%' }}
                   animate={{ y: '0%' }}
                   transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.5 }}
-                  className="fixed bottom-0 left-0 right-0 flex justify-center items-end pointer-events-none"
+                  className="fixed bottom-0 left-0 right-0 flex justify-center items-end pointer-events-none z-0"
               >
                   <video 
                       autoPlay 
@@ -810,9 +810,9 @@ export default function App() {
   // 2. Complete View
   if (appPhaseIndex === 4) {
       return (
-          <div className="min-h-screen flex flex-col bg-white font-sans text-gray-900 relative">
-              {/* Content - Centered */}
-              <div className="flex-1 flex flex-col items-center justify-center px-16 py-24">
+          <div className="min-h-screen flex flex-col bg-white font-sans text-gray-900 relative overflow-y-auto">
+              {/* Content - Centered with padding */}
+              <div className="flex-1 flex flex-col items-center justify-center px-8 md:px-16 py-24 pb-[30vh] relative z-10">
                   <div className="w-full max-w-2xl text-left">
                       <h1 className="text-5xl font-semibold mb-8 leading-tight">
                           Sent to Preetoshi!
@@ -851,7 +851,7 @@ export default function App() {
                   initial={{ y: '100%' }}
                   animate={{ y: '0%' }}
                   transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.5 }}
-                  className="fixed bottom-0 left-0 right-0 flex justify-center items-end pointer-events-none"
+                  className="fixed bottom-0 left-0 right-0 flex justify-center items-end pointer-events-none z-0"
               >
                   <video 
                       autoPlay 
