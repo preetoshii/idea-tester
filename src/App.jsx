@@ -126,8 +126,8 @@ const CanvasCard = ({ idea, votes, onRemoveVote, onViewDetails, isHovered }) => 
             
             <div className="flex-1 overflow-hidden mb-4 pointer-events-none">
                 <p className="text-sm text-gray-600 line-clamp-3">{idea.purpose}</p>
-                <div className="mt-2 text-xs text-blue-500 font-medium flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Info size={12} /> Click for details
+                <div className="mt-3 text-xs text-blue-600 font-semibold flex items-center gap-1">
+                    <Info size={14} /> Read full details
                 </div>
             </div>
 
@@ -849,6 +849,9 @@ export default function App() {
                           </p>
                           <p>
                               We've got a bunch of simple ideas. Your job is to drag stars to vote on which of these you find would actually drive the most transformation for users (and yourself!)
+                          </p>
+                          <p>
+                              <strong>Tip:</strong> Tap any card to expand it and read the full details before voting.
                           </p>
                           <p className="text-gray-600">
                               I'll collect these votes and use them to help determine the best ones.
