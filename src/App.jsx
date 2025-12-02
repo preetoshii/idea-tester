@@ -16,7 +16,7 @@ const YOUR_EMAIL = "preetoshi@betterup.co";
 
 // --- COMPONENTS ---
 
-const DetailModal = ({ idea, onClose }) => {
+const DetailModal = ({ idea, votes, onRemoveVote, onClose, isHovered }) => {
     if (!idea) return null;
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
@@ -24,18 +24,44 @@ const DetailModal = ({ idea, onClose }) => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="bg-white w-full max-w-2xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+                className={`bg-white w-full max-w-2xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col relative transition-all duration-200 ${isHovered ? 'ring-4 ring-blue-500 ring-opacity-50 scale-[1.02]' : ''}`}
                 onClick={e => e.stopPropagation()}
+                data-idea-id={idea.id}
             >
+                {/* Drag Overlay Highlight */}
+                {isHovered && <div className="absolute inset-0 border-4 border-blue-500 z-50 rounded-2xl pointer-events-none"></div>}
+
                 <div className="p-6 border-b border-gray-100 flex justify-between items-start bg-gray-50/50">
-                    <div>
+                    <div className="flex-1">
                         <span className="inline-block px-2 py-1 bg-blue-100 text-blue-700 text-xs font-bold uppercase rounded mb-2">{idea.phase}</span>
-                        <h2 className="text-2xl font-bold text-gray-900">{idea.title}</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-2">{idea.title}</h2>
+                        
+                        {/* Stars Display in Modal */}
+                        <div className="flex items-center gap-2 mt-2">
+                            <div className="flex gap-1">
+                                {[...Array(votes || 0)].map((_, i) => (
+                                    <motion.div 
+                                        key={i} 
+                                        initial={{ scale: 0 }} 
+                                        animate={{ scale: 1 }} 
+                                        className="text-yellow-400 cursor-pointer hover:scale-110 transition-transform group/star"
+                                        onClick={(e) => { e.stopPropagation(); onRemoveVote(idea.id); }}
+                                        title="Click to remove star"
+                                    >
+                                        <Star size={32} fill="currentColor" />
+                                        <div className="absolute top-full left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover/star:opacity-100 transition-opacity pointer-events-none whitespace-nowrap mt-1 z-50">
+                                            Click to remove star
+                                        </div>
+                                    </motion.div>
+                                ))}
+                                {(votes || 0) === 0 && <span className="text-sm text-gray-400 italic flex items-center gap-1"><Star size={16} /> Drag stars here to vote</span>}
+                            </div>
+                        </div>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full transition-colors"><X size={24} /></button>
+                    <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full transition-colors ml-4"><X size={24} /></button>
                 </div>
                 
-                <div className="p-8 overflow-y-auto space-y-6 text-gray-700">
+                <div className="p-8 overflow-y-auto space-y-6 text-gray-700 relative z-10">
                     {idea.purpose && (
                         <div>
                             <h3 className="font-bold text-gray-900 uppercase text-xs tracking-wide mb-1">Purpose</h3>
@@ -1020,7 +1046,13 @@ export default function App() {
           
           <AnimatePresence>
               {selectedIdea && (
-                  <DetailModal idea={selectedIdea} onClose={() => setSelectedIdea(null)} />
+                  <DetailModal 
+                      idea={selectedIdea} 
+                      votes={votes[selectedIdea.id]}
+                      onRemoveVote={handleRemoveVote}
+                      onClose={() => setSelectedIdea(null)} 
+                      isHovered={draggedOverId === selectedIdea.id}
+                  />
               )}
           </AnimatePresence>
 
@@ -1075,7 +1107,7 @@ export default function App() {
               </div>
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 p-0 md:p-6 pointer-events-none flex justify-center items-end z-20 overflow-visible">
+          <div className="absolute bottom-0 left-0 right-0 p-0 md:p-6 pointer-events-none flex justify-center items-end z-[60] overflow-visible">
               <div 
                   className={`pointer-events-auto bg-white/90 backdrop-blur-md border-t md:border border-gray-200 shadow-2xl rounded-t-2xl md:rounded-2xl p-4 w-full md:w-auto flex flex-col md:flex-row items-center gap-4 md:gap-8 overflow-visible transition-all duration-300
                       ${draggedOverDock ? 'border-blue-500 ring-4 ring-blue-500/20' : 'border-gray-200'}
