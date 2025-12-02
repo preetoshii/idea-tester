@@ -470,6 +470,38 @@ export default function App() {
       return initialIdeas.filter(i => i.phase === currentPhaseName);
   }, [currentPhaseName]);
 
+  // Generate random positions for ideas once
+  const ideaPositions = useMemo(() => {
+      const positions = {};
+      // Simple grid-based randomization to avoid overlaps but look scattered
+      const GRID_COLS = 4;
+      const CELL_WIDTH = 400;
+      const CELL_HEIGHT = 350;
+      const CANVAS_PADDING = 100;
+      
+      initialIdeas.forEach((idea, index) => {
+          // Group by phase to keep them somewhat organized but scattered
+          // We'll just use a deterministic hash based on ID to keep positions stable across renders
+          const seed = idea.id * 12345; 
+          const randomX = (Math.sin(seed) * 0.5 + 0.5); // 0-1
+          const randomY = (Math.cos(seed) * 0.5 + 0.5); // 0-1
+          
+          // Assign to a grid cell based on index
+          const col = index % GRID_COLS;
+          const row = Math.floor(index / GRID_COLS);
+          
+          // Add jitter within the cell
+          const x = CANVAS_PADDING + (col * CELL_WIDTH) + (randomX * 100 - 50);
+          const y = CANVAS_PADDING + (row * CELL_HEIGHT) + (randomY * 100 - 50);
+          
+          // Add some rotation for messy look
+          const rotate = (randomX * 6) - 3; // -3 to +3 degrees
+          
+          positions[idea.id] = { x, y, rotate };
+      });
+      return positions;
+  }, []);
+
   // Get available stars for current phase
   const availableStars = useMemo(() => {
       if (!currentPhaseName) return [];
@@ -1082,25 +1114,58 @@ export default function App() {
               <div className="hidden md:block w-full h-full cursor-grab active:cursor-grabbing">
                   <TransformWrapper
                       initialScale={1}
-                      initialPositionX={0}
-                      initialPositionY={0}
+                      initialPositionX={-100}
+                      initialPositionY={-100}
                       minScale={0.5}
                       maxScale={2}
                       centerOnInit={true}
                       limitToBounds={false}
                   >
                       <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full">
-                          <div className="w-[2000px] h-[1500px] flex flex-wrap content-start p-20 gap-8 bg-dot-pattern bg-[length:20px_20px]">
-                              {phaseIdeas.map(idea => (
-                                  <CanvasCard 
-                                      key={idea.id} 
-                                      idea={idea} 
-                                      votes={votes[idea.id]} 
-                                      onRemoveVote={handleRemoveVote}
-                                      onViewDetails={setSelectedIdea}
-                                      isHovered={draggedOverId === idea.id}
-                                  />
-                              ))}
+                          <div className="w-[2000px] h-[2000px] relative bg-dot-pattern bg-[length:20px_20px]">
+                              {phaseIdeas.map((idea, index) => {
+                                  const pos = ideaPositions[idea.id] || { x: 0, y: 0, rotate: 0 };
+                                  // Recalculate position relative to the filtered list to keep them compact
+                                  // We can't reuse the global positions because phases might be far apart in the original list
+                                  // So let's generate a local position based on the *current phase index*
+                                  
+                                  const GRID_COLS = 3;
+                                  const CELL_WIDTH = 450;
+                                  const CELL_HEIGHT = 400;
+                                  const CANVAS_PADDING = 150;
+                                  
+                                  const seed = idea.id * 12345; 
+                                  const randomX = (Math.sin(seed) * 0.5 + 0.5); 
+                                  const randomY = (Math.cos(seed) * 0.5 + 0.5); 
+                                  
+                                  const col = index % GRID_COLS;
+                                  const row = Math.floor(index / GRID_COLS);
+                                  
+                                  const left = CANVAS_PADDING + (col * CELL_WIDTH) + (randomX * 150 - 75);
+                                  const top = CANVAS_PADDING + (row * CELL_HEIGHT) + (randomY * 100 - 50);
+                                  const rotate = (randomX * 8) - 4;
+
+                                  return (
+                                      <div 
+                                          key={idea.id}
+                                          style={{
+                                              position: 'absolute',
+                                              left: `${left}px`,
+                                              top: `${top}px`,
+                                              transform: `rotate(${rotate}deg)`,
+                                              zIndex: draggedOverId === idea.id ? 50 : 10
+                                          }}
+                                      >
+                                          <CanvasCard 
+                                              idea={idea} 
+                                              votes={votes[idea.id]} 
+                                              onRemoveVote={handleRemoveVote}
+                                              onViewDetails={setSelectedIdea}
+                                              isHovered={draggedOverId === idea.id}
+                                          />
+                                      </div>
+                                  );
+                              })}
                           </div>
                       </TransformComponent>
                   </TransformWrapper>
