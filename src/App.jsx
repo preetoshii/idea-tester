@@ -7,9 +7,9 @@ import { Check, X, Settings, ChevronRight, ChevronLeft, ChevronDown, ChevronUp, 
 const PHASES = ["Planning", "Action", "Integration"];
 
 const PHASE_DESCRIPTIONS = {
-    "Planning": "The user has a goal, but no plan to get there. This phase is about figuring out the specific steps to make it happen. Which activities best help someone turn a vague wish into a solid plan?",
-    "Action": "This is where the user tries to do the work in real life, and it's easy to get stuck or lose motivation. We need quick tools to help them keep going. Which activities best help people stay on track when they want to quit?",
-    "Integration": "The user looks back at their week to see what worked and what didn't. This prevents them from making the same mistakes twice. Which activities best help someone learn from their experience?"
+    "Planning": "The user has a goal, but no plan to get there. This phase is about figuring out the specific steps to make it happen. Which activities do you think would be the most powerful for this phase?",
+    "Action": "This is where the user tries to do the work in real life, and it's easy to get stuck or lose motivation. We need quick tools to help them keep going. Which activities do you think would be the most powerful for this phase?",
+    "Integration": "The user looks back at their week to see what worked and what didn't. This prevents them from making the same mistakes twice. Which activities do you think would be the most powerful for this phase?"
 };
 
 
