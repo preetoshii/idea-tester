@@ -210,8 +210,8 @@ const CanvasCard = ({ idea, votes, onRemoveVote, onViewDetails, isHovered }) => 
             </div>
 
             {/* Desktop Hover Overlay */}
-            <div className="absolute inset-0 bg-black/60 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 hidden md:flex items-center justify-center z-40 pointer-events-none">
-                <span className="text-white font-semibold text-lg bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm">
+            <div className="absolute inset-0 bg-blue-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 hidden md:flex items-center justify-center z-40 pointer-events-none">
+                <span className="text-blue-700 font-semibold text-lg bg-blue-100/90 px-4 py-2 rounded-full backdrop-blur-sm border border-blue-200">
                     Read more
                 </span>
             </div>
