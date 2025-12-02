@@ -851,7 +851,7 @@ export default function App() {
                               We've got a bunch of simple ideas. Your job is to drag stars to vote on which of these you find would actually drive the most transformation for users (and yourself!)
                           </p>
                           <p>
-                              <strong>Tip:</strong> Tap any card to expand it and read the full details before voting.
+                              <strong>NOTE:</strong> Tap any card to expand it and read the full details before voting.
                           </p>
                           <p className="text-gray-600">
                               I'll collect these votes and use them to help determine the best ones.
