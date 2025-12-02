@@ -734,8 +734,22 @@ export default function App() {
       return (
           <div className="min-h-screen flex flex-col bg-white font-sans text-gray-900 relative overflow-y-auto">
               {/* Content - Centered with padding for video */}
-              <div className="flex-1 flex flex-col items-center justify-center px-8 md:px-16 py-24 pb-[30vh] relative z-10">
+              <div className="flex-1 flex flex-col items-center justify-center px-8 md:px-16 py-12 md:py-24 pb-[30vh] relative z-10">
                   <div className="w-full max-w-2xl text-left">
+                      {/* Mobile Video - Top (Visible only on small screens) */}
+                      <div className="block md:hidden mb-8 -ml-4">
+                           <video 
+                              autoPlay 
+                              loop 
+                              muted 
+                              playsInline
+                              className="h-48 w-auto object-contain"
+                              style={{ mixBlendMode: 'multiply' }}
+                          >
+                              <source src="/voting_preetoshi.mp4" type="video/mp4" />
+                          </video>
+                      </div>
+
                       <h1 className="text-5xl font-semibold mb-8 leading-tight">
                           I want <span className="text-red-600">YOU</span> to vote
                       </h1>
@@ -778,12 +792,12 @@ export default function App() {
                   </div>
               </div>
 
-              {/* Video - Fixed at bottom */}
+              {/* Desktop Video - Fixed at bottom (Hidden on mobile) */}
               <motion.div 
                   initial={{ y: '100%' }}
                   animate={{ y: '0%' }}
                   transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.5 }}
-                  className="fixed bottom-0 left-0 right-0 flex justify-center items-end pointer-events-none z-0"
+                  className="hidden md:flex fixed bottom-0 left-0 right-0 justify-center items-end pointer-events-none z-0"
               >
                   <video 
                       autoPlay 
@@ -812,8 +826,22 @@ export default function App() {
       return (
           <div className="min-h-screen flex flex-col bg-white font-sans text-gray-900 relative overflow-y-auto">
               {/* Content - Centered with padding */}
-              <div className="flex-1 flex flex-col items-center justify-center px-8 md:px-16 py-24 pb-[30vh] relative z-10">
+              <div className="flex-1 flex flex-col items-center justify-center px-8 md:px-16 py-12 md:py-24 pb-[30vh] relative z-10">
                   <div className="w-full max-w-2xl text-left">
+                      {/* Mobile Video - Top (Visible only on small screens) */}
+                      <div className="block md:hidden mb-8 -ml-4">
+                           <video 
+                              autoPlay 
+                              loop 
+                              muted 
+                              playsInline
+                              className="h-48 w-auto object-contain"
+                              style={{ mixBlendMode: 'multiply' }}
+                          >
+                              <source src="/laughing_preetoshi.mp4" type="video/mp4" />
+                          </video>
+                      </div>
+
                       <h1 className="text-5xl font-semibold mb-8 leading-tight">
                           Sent to Preetoshi!
                       </h1>
@@ -846,12 +874,12 @@ export default function App() {
                   </div>
               </div>
 
-              {/* Video - Fixed at bottom */}
+              {/* Desktop Video - Fixed at bottom (Hidden on mobile) */}
               <motion.div 
                   initial={{ y: '100%' }}
                   animate={{ y: '0%' }}
                   transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.5 }}
-                  className="fixed bottom-0 left-0 right-0 flex justify-center items-end pointer-events-none z-0"
+                  className="hidden md:flex fixed bottom-0 left-0 right-0 justify-center items-end pointer-events-none z-0"
               >
                   <video 
                       autoPlay 
