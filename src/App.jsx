@@ -55,10 +55,10 @@ const DetailModal = ({ idea, votes, onRemoveVote, onClose, isHovered, onNext, on
 
             <motion.div 
                 key={idea.id} // Key ensures animation triggers on change
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ type: "spring", duration: 0.5 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
                 className={`bg-white w-full max-w-2xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col relative transition-all duration-200 ${isHovered ? 'ring-4 ring-blue-500 ring-opacity-50 scale-[1.02]' : ''}`}
                 onClick={e => e.stopPropagation()}
                 data-idea-id={idea.id}
