@@ -7,9 +7,9 @@ import { Check, X, Settings, ChevronRight, ChevronLeft, ChevronDown, ChevronUp, 
 const PHASES = ["Planning", "Action", "Integration"];
 
 const PHASE_DESCRIPTIONS = {
-    "Planning": "This phase is about turning the \"North Star\" into a roadmap. The user knows what they want (from Discovery), but not how to get there. This phase is about strategy, not just to-do lists. We need to help them anticipate obstacles, make trade-offs, and define the specific steps to turn a vague aspiration into a concrete commitment. Which activities do you think would be most effective for this phase?",
-    "Action": "This phase is about overcoming friction in the real world. The user has left the planning stage and is in the \"Messy Middle\" of execution. This is where motivation fades and old habits fight back. Our goal is to provide micro-interventions that reduce the friction of starting, help regulate stress, and keep them moving when things get hard. Which activities would you find most helpful for this phase?",
-    "Integration": "This phase is about turning experience into wisdom. The user has tried to take action—now they need to make sense of the results. This phase focuses on pattern recognition: distinguishing between bad luck and bad process, celebrating progress, and deciding how to adjust the plan for the next cycle. Which activities do you think would drive the most transformation in this phase?"
+    "Planning": "The user has a goal, but no plan to get there. This phase is about figuring out the specific steps to make it happen. Which activities best help someone turn a vague wish into a solid plan?",
+    "Action": "This is where the user tries to do the work in real life, and it's easy to get stuck or lose motivation. We need quick tools to help them keep going. Which activities best help people stay on track when they want to quit?",
+    "Integration": "The user looks back at their week to see what worked and what didn't. This prevents them from making the same mistakes twice. Which activities best help someone learn from their experience?"
 };
 
 const YOUR_EMAIL = "preetoshi@betterup.co"; 
