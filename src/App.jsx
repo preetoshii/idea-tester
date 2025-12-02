@@ -1073,7 +1073,7 @@ export default function App() {
               >
                   
                   <div className="flex flex-col items-center gap-2 w-full md:w-auto">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Voting Star Bank</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">DRAG THESE VOTING STARS</span>
                       <div className="flex justify-center gap-2 bg-gray-100 p-2 rounded-xl inner-shadow overflow-visible w-full md:w-auto min-h-[60px]">
                           {availableStars.map((star) => (
                               <DraggableStar 
