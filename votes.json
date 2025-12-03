@@ -286,5 +286,89 @@
         "votes": 1
       }
     ]
+  },
+  {
+    "voter": "Preetoshi",
+    "timestamp": "2025-12-03T07:13:20.086Z",
+    "selections": [
+      {
+        "id": 1,
+        "title": "The Pre-Mortem ☠️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 7,
+        "title": "The Triage Tent ⛺",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 8,
+        "title": "Start / Stop / Continue 🛑",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 9,
+        "title": "The Energy/Impact Audit ⚡",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 13,
+        "title": "The Relationship Map 🤝",
+        "phase": "Planning",
+        "votes": 2
+      },
+      {
+        "id": 16,
+        "title": "The \"If-Then\" Architect 🧠",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 18,
+        "title": "The Rejection Gym 🥊",
+        "phase": "Action",
+        "votes": 2
+      },
+      {
+        "id": 19,
+        "title": "The \"Done\" List (Anti-To-Do) ✅",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 20,
+        "title": "The Decision Compass 🧭",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 26,
+        "title": "Sequence Logic 🔗",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 33,
+        "title": "The Time/Value Matrix ⏳",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 35,
+        "title": "Advice to Your Future Self 🔮",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 48,
+        "title": "The Gratitude Graph 🤝",
+        "phase": "Integration",
+        "votes": 1
+      }
+    ]
   }
 ]
