@@ -370,5 +370,101 @@
         "votes": 1
       }
     ]
+  },
+  {
+    "voter": "Ashton",
+    "timestamp": "2025-12-03T16:45:45.388Z",
+    "selections": [
+      {
+        "id": 1,
+        "title": "The Pre-Mortem ☠️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 5,
+        "title": "Friction Logger 🧱",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 9,
+        "title": "The Energy/Impact Audit ⚡",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 15,
+        "title": "Success Signals 📏",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 18,
+        "title": "The Rejection Gym 🥊",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 19,
+        "title": "The \"Done\" List (Anti-To-Do) ✅",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 20,
+        "title": "The Decision Compass 🧭",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 24,
+        "title": "The Chapter Close 📕",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 26,
+        "title": "Sequence Logic 🔗",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 27,
+        "title": "The Blind Spot Check 👁️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 34,
+        "title": "Pattern Spotter 🕸️",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 39,
+        "title": "The Obligation Detox 🗑️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 41,
+        "title": "Name It to Tame It 🏷️",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 46,
+        "title": "The \"Un-Learning\" List 🧠",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 47,
+        "title": "Effort vs. Outcome 🎲",
+        "phase": "Integration",
+        "votes": 1
+      }
+    ]
   }
 ]
