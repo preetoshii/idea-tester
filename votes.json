@@ -190,5 +190,101 @@
         "votes": 1
       }
     ]
+  },
+  {
+    "voter": "Derrick",
+    "timestamp": "2025-12-03T00:36:33.923Z",
+    "selections": [
+      {
+        "id": 6,
+        "title": "Wisdom On Demand 🎧",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 10,
+        "title": "The Alignment Meter 📐",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 11,
+        "title": "The Insight Thread 🧵",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 15,
+        "title": "Success Signals 📏",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 18,
+        "title": "The Rejection Gym 🥊",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 19,
+        "title": "The \"Done\" List (Anti-To-Do) ✅",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 27,
+        "title": "The Blind Spot Check 👁️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 33,
+        "title": "The Time/Value Matrix ⏳",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 36,
+        "title": "The Goal Cleaner 🧹",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 37,
+        "title": "The \"Not My Job\" Sorter 🙅",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 38,
+        "title": "The Support System Audit 🌡️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 39,
+        "title": "The Obligation Detox 🗑️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 42,
+        "title": "The 5-Minute Sprint ⏱️",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 43,
+        "title": "The Presentation Polish 🎤",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 48,
+        "title": "The Gratitude Graph 🤝",
+        "phase": "Integration",
+        "votes": 1
+      }
+    ]
   }
 ]
