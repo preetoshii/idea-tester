@@ -562,5 +562,101 @@
         "votes": 1
       }
     ]
+  },
+  {
+    "voter": "Renelle",
+    "timestamp": "2025-12-04T18:53:28.690Z",
+    "selections": [
+      {
+        "id": 1,
+        "title": "The Pre-Mortem ☠️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 7,
+        "title": "The Triage Tent ⛺",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 10,
+        "title": "The Alignment Meter 📐",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 11,
+        "title": "The Insight Thread 🧵",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 16,
+        "title": "The \"If-Then\" Architect 🧠",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 27,
+        "title": "The Blind Spot Check 👁️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 29,
+        "title": "The Micro-Habit Stacker 🧱",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 31,
+        "title": "Focus Blocker 🚫",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 32,
+        "title": "Pulse Check (Head/Heart/Hands) 🩺",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 34,
+        "title": "Pattern Spotter 🕸️",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 36,
+        "title": "The Goal Cleaner 🧹",
+        "phase": "Integration",
+        "votes": 1
+      },
+      {
+        "id": 39,
+        "title": "The Obligation Detox 🗑️",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 40,
+        "title": "The Scenario Spinner 🎲",
+        "phase": "Planning",
+        "votes": 1
+      },
+      {
+        "id": 42,
+        "title": "The 5-Minute Sprint ⏱️",
+        "phase": "Action",
+        "votes": 1
+      },
+      {
+        "id": 47,
+        "title": "Effort vs. Outcome 🎲",
+        "phase": "Integration",
+        "votes": 1
+      }
+    ]
   }
 ]
