@@ -31,7 +31,7 @@ const DetailModal = ({ idea, votes, onRemoveVote, onClose, isHovered, onNext, on
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [onNext, onPrev, onClose, hasNext, hasPrev]);
 
-    return (
+  return (
         <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -138,7 +138,7 @@ const DetailModal = ({ idea, votes, onRemoveVote, onClose, isHovered, onNext, on
                         </div>
                     )}
                     {idea.output && (
-                        <div>
+      <div>
                             <h3 className="font-bold text-gray-900 uppercase text-xs tracking-wide mb-1">Output</h3>
                             <p className="italic text-gray-600">{idea.output}</p>
                         </div>
@@ -488,13 +488,13 @@ const MobileWarningModal = ({ onClose }) => (
                 <p className="text-gray-400 text-sm mt-4 font-medium">
                     - Preetoshi
                 </p>
-            </div>
+      </div>
             <button
                 onClick={onClose}
                 className="w-full bg-black text-white py-4 rounded-xl font-bold text-lg hover:bg-gray-800 transition-colors active:scale-95"
             >
                 Continue Anyway
-            </button>
+        </button>
         </motion.div>
     </motion.div>
 );
@@ -1059,8 +1059,8 @@ export default function App() {
                           </p>
                           <p className="text-gray-600">
                               I'll collect these votes and use them to help determine the best ones.
-                          </p>
-                      </div>
+        </p>
+      </div>
 
                       <div className="mb-8">
                           <label className="block text-lg font-semibold text-gray-900 mb-3">What's your name?</label>
@@ -1073,13 +1073,22 @@ export default function App() {
                           />
                       </div>
 
-                      <button 
-                          onClick={handleNext}
-                          disabled={!userName.trim()}
-                          className="bg-black text-white px-8 py-4 rounded-full font-bold text-xl hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                          Start Voting
-                      </button>
+                      <div className="flex flex-col sm:flex-row gap-4">
+                          <button 
+                              onClick={handleNext}
+                              disabled={!userName.trim()}
+                              className="bg-black text-white px-8 py-4 rounded-full font-bold text-xl hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                              Start Voting
+                          </button>
+                          <button 
+                              onClick={fetchRankings}
+                              className="bg-gray-200 text-gray-900 px-8 py-4 rounded-full font-semibold text-xl hover:bg-gray-300 transition-colors flex items-center justify-center gap-2"
+                          >
+                              <BarChart3 size={20} />
+                              View Votes
+                          </button>
+                      </div>
                   </div>
               </div>
 
@@ -1113,6 +1122,14 @@ export default function App() {
               <AnimatePresence>
                   {showMobileWarning && <MobileWarningModal onClose={handleDismissWarning} />}
               </AnimatePresence>
+              
+              {/* Rankings Overlay */}
+              <RankingOverlay 
+                  show={showRankings}
+                  onClose={() => setShowRankings(false)}
+                  rankings={rankings}
+                  isLoading={isLoadingRankings}
+              />
           </div>
       );
   }
@@ -1163,8 +1180,8 @@ export default function App() {
                                   </p>
                                   <p className="text-gray-500 italic">
                                       ... Jk
-                                  </p>
-                              </>
+      </p>
+    </>
                           )}
                       </div>
 
